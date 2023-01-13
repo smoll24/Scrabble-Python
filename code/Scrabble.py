@@ -52,11 +52,19 @@ for let, nb in jetons_nbre.items():
 #DEFINITION DES FONCTIONS ---------------------------------------------------------------
 
 def mot_valide(mot):
+    
+    if len(mot) < 2:
+        return False
+    
     try:
         french_dict = enchant.Dict("fr")
-        return french_dict.check(mot)
+        if not french_dict.check(mot):
+            return False
     except:
         print('Error with spellcheck')
+        
+    return True
+    
     
 def initialise_jetons():
     for i in range(7):

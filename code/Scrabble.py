@@ -43,11 +43,11 @@ plateau = {(0,0):('m',3), (0,7):('m',3), (0,14):('m',3), (7,0):('m',3),
 couleurs = {"m2":"\u001b[45m","m3":"\u001b[41m","l2":"\u001b[46m","l3":"\u001b[44m"}
 jetons_p1 = []
 
-#creat jetons_bag which we will pull from to get letters
-jetons_bag = []
+#creat bag which we will pull from to get letters
+bag = []
 for let, nb in jetons_nbre.items():
     for i in range(nb):
-        jetons_bag.append(let)
+        bag.append(let)
 
 #DEFINITION DES FONCTIONS ---------------------------------------------------------------
 
@@ -61,10 +61,10 @@ def mot_valide(mot):
 def initialise_jetons():
     for i in range(7):
         #Vérifie que le nombre de jetons de la lettre choisie est plus grand que 0
-        jeton_rnd = random.choice(jetons_bag)#[i for i, j in jetons_nbre.items() if j > 0])
+        jeton_rnd = random.choice(bag)#[i for i, j in jetons_nbre.items() if j > 0])
         jetons_p1.append(jeton_rnd)
         #jetons_nbre[jeton_rnd] -= 1
-        jetons_bag.remove(jeton_rnd)
+        bag.remove(jeton_rnd)
 
 def initialise_board():
     #add in multiplier squares and colors

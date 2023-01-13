@@ -1,5 +1,13 @@
-import enchant
+#import enchant
 import random
+import importlib
+
+enchant = None
+
+try:
+    enchant = importlib.import_module('enchant')
+except:
+    print("Cannot find 'enchant' module. Wordchecker is not available.")
 
 #DEFINITION DES VARIABLES ------------------------------------------------------------
 
@@ -38,8 +46,9 @@ jetons_p1 = []
 #DEFINITION DES FONCTIONS ---------------------------------------------------------------
 
 def mot_valide(mot):
-    french_dict = enchant.Dict("fr")
-    return french_dict.check(mot)
+    if enchant:
+        french_dict = enchant.Dict("fr")
+        return french_dict.check(mot)
     
 def initialise_jetons():
     for i in range(7):
@@ -48,20 +57,22 @@ def initialise_jetons():
         jetons_p1.append(jeton_rnd)
         jetons_nbre[jeton_rnd] -= 1
 
+def initialise_board():
+    for cord, value in plateau.items():
+        i, j = cord
+        val = value[0]+str(value[1])
+        board[i][j] = couleurs[str(val)]+val+"\033[0m"
+
+def print_board():
+    for row in board:
+        for element in row:
+            print(element, end=' ')
+        print()
+
 #PROGRAMME ------------------------------------------------------------------------------
         
-for cord, value in plateau.items():
-    i, j = cord
-    val = value[0]+str(value[1])
-    board[i][j] = couleurs[str(val)]+val+"\033[0m"
-    
-for row in board:
-    for element in row:
-        print(element, end=' ')
-    print()
-    
+initialise_board()
+print_board()
+
 initialise_jetons()
 print(jetons_p1)
-
-
-    

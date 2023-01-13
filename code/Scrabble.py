@@ -74,7 +74,12 @@ def initialise_board():
         board[i][j] = "\u001b[37m"+couleurs[str(val)]+val+"\033[0m\u001b[30m"
 
 def print_board():
-    for row in board:
+    print('  ',end='')
+    for i in range(15):
+        print(' '+chr(i+97), end = '')
+    print()
+    for i,row in enumerate(board):
+        print(str(i+1).rjust(2), end = '')
         for element in row:
             print(element, end='')
         print()

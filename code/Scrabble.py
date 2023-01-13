@@ -11,7 +11,7 @@ except:
 
 #DEFINITION DES VARIABLES ------------------------------------------------------------
 
-board = [["\u001b[40m[]\033[0m\u001b[30m" for i in range(15)] for i in range(15)]
+board = [["\u001b[40m  \033[0m\u001b[30m" for i in range(15)] for i in range(15)]
 
 jetons_pts = {"A":1,"B":3,"C":3,"D":2,"E":1,"F":4,"G":2,"H":4, "I":1, 
               "J":8,"K":10,"L":1,"M":2,"N":1,"O":1,"P":3,"Q":8,"R":1, 
@@ -81,9 +81,12 @@ def initialise_board():
         val = value[0]+str(value[1])
         board[i][j] = "\u001b[37m"+couleurs[str(val)]+val+"\033[0m\u001b[30m"
 
+def place_let(let,cord):
+    x = cord[0]
+    y = cord[1]
+    board[y][x] = '\u001b[47m'+let.upper()+' \033[0m'
+
 def print_board():
-    print('There are',len(bag),'letters left in the bag.')
-    
     print('  ',end='')
     for i in range(15):
         print(' '+chr(i+97), end = '')
@@ -93,11 +96,10 @@ def print_board():
         for element in row:
             print(element, end='')
         print()
+    print('There are',len(bag),'letters left in the bag.')
 
 #PROGRAMME ------------------------------------------------------------------------------
-        
+initialise_jetons()
 initialise_board()
 print_board()
-
-initialise_jetons()
 print(jetons_p1)

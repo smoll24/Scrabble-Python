@@ -2,8 +2,8 @@
 import random
 import importlib
 
+#Import enchant if available
 enchant = None
-
 try:
     enchant = importlib.import_module('enchant')
 except:
@@ -11,7 +11,7 @@ except:
 
 #DEFINITION DES VARIABLES ------------------------------------------------------------
 
-board = [["[]" for i in range(15)] for i in range(15)]
+board = [["\u001b[40m[]\033[0m" for i in range(15)] for i in range(15)]
 
 jetons_pts = {"A":1,"B":3,"C":3,"D":2,"E":1,"F":4,"G":2,"H":4, "I":1, 
               "J":8,"K":10,"L":1,"M":2,"N":1,"O":1,"P":3,"Q":8,"R":1, 
@@ -43,21 +43,31 @@ plateau = {(0,0):('m',3), (0,7):('m',3), (0,14):('m',3), (7,0):('m',3),
 couleurs = {"m2":"\u001b[45m","m3":"\u001b[41m","l2":"\u001b[46m","l3":"\u001b[44m"}
 jetons_p1 = []
 
+#creat jetons_bag which we will pull from to get letters
+jetons_bag = []
+for let, nb in jetons_nbre.items():
+    for i in range(nb):
+        jetons_bag.append(let)
+
 #DEFINITION DES FONCTIONS ---------------------------------------------------------------
 
 def mot_valide(mot):
-    if enchant:
+    try:
         french_dict = enchant.Dict("fr")
         return french_dict.check(mot)
+    except:
+        print('Error with spellcheck')
     
 def initialise_jetons():
     for i in range(7):
         #Vérifie que le nombre de jetons de la lettre choisie est plus grand que 0
-        jeton_rnd = random.choice([i for i, j in jetons_nbre.items() if j > 0])
+        jeton_rnd = random.choice(jetons_bag)#[i for i, j in jetons_nbre.items() if j > 0])
         jetons_p1.append(jeton_rnd)
-        jetons_nbre[jeton_rnd] -= 1
+        #jetons_nbre[jeton_rnd] -= 1
+        jetons_bag.remove(jeton_rnd)
 
 def initialise_board():
+    #add in multiplier squares and colors
     for cord, value in plateau.items():
         i, j = cord
         val = value[0]+str(value[1])
@@ -66,7 +76,7 @@ def initialise_board():
 def print_board():
     for row in board:
         for element in row:
-            print(element, end=' ')
+            print(element, end='')
         print()
 
 #PROGRAMME ------------------------------------------------------------------------------

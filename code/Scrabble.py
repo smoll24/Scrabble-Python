@@ -184,7 +184,7 @@ def print_letters():
     print("LETTERS")
     print(jetons_p1)
 
-def place_let(let,cord):
+def place_let(let, cord):
     '''Places a letter on the board
     Input: let - single chr string that isalpha
            cord - tuple countaining two ints (x,y)'''
@@ -192,6 +192,31 @@ def place_let(let,cord):
     y = cord[1]
     board[y][x] = couleur['txt_noir']+couleur['bg_blanc']+let.upper()+' '+couleur['clear']
 
+def get_word_table(word, cord, direct):
+    '''Creates a dict of all the letter's cordinates in a word
+    Input: let - single chr string that isalpha
+           cord - tuple countaining two ints (x,y)
+           direct - bool True is right and False is down
+    Returns: word_table - dict of tuple:string '''
+    word_table = {}
+    x = cord[0]
+    y = cord[1]
+    
+    for i in range(len(word)):
+        word_table[x,y] = word[i]
+        
+        if direct:
+            x += 1
+        else:
+            y += 1
+            
+    return word_table
+
+def place_word(word, cord, direct):
+    word_table = get_word_table(word, cord, direct)
+    for cord, let in word_table.items():
+        place_let(let,cord)
+        
 def user_input():
     while True:
         mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")

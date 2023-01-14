@@ -80,10 +80,9 @@ def mot_valide(mot):
     
 def initialise_jetons():
     for i in range(7):
-        #Vérifie que le nombre de jetons de la lettre choisie est plus grand que 0
-        jeton_rnd = random.choice(bag)#[i for i, j in jetons_nbre.items() if j > 0])
+        #Picks a random jetons from the bag
+        jeton_rnd = random.choice(bag)
         jetons_p1.append(jeton_rnd)
-        #jetons_nbre[jeton_rnd] -= 1
         bag.remove(jeton_rnd)
 
 def initialise_board():
@@ -108,8 +107,6 @@ def print_board():
         for element in row:
             print(element, end='')
         print()
-    print()
-    print('There are',len(bag),'letters left in the bag.')
     
 def title_screen():
     global num_players, score_board
@@ -178,6 +175,11 @@ def print_score():
         print('|')
         print(line)
     print()
+    
+def print_letters():
+    print('There are',len(bag),'letters left in the bag.\n')
+    print("LETTERS")
+    print(jetons_p1)
 
 def user_input():
     while True:
@@ -196,5 +198,4 @@ initialise_board()
 print("ROUND 1 - PLAYER 1\n")
 print_board()
 print_score()
-print("LETTERS")
-print(jetons_p1)
+print_letters()

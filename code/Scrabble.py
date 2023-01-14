@@ -154,7 +154,7 @@ def print_score():
         len_row = temp_len
 
     len_row += (len(score_board[0])*3)
-    line = (('+')+('-')*(len_row)+('+'))
+    line = (('+')+('-')*(len_row-1)+('+'))
 
     #Finds length on each column
     len_columns = [' ' for i in range(num_players)]

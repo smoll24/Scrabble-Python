@@ -16,7 +16,7 @@ couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m",'bg_blanc':'\u001b[47m
 couleurs_loc= {"m2":couleur['bg_magenta'],"m3":couleur['bg_rouge'],"l2":couleur['bg_cyan'],"l3":couleur['bg_bleu']}
 
 #Initialise board with colors
-board = [[couleur['bg_noir']+'  '+couleur['clear'] for i in range(15)] for i in range(15)]
+board = [['  'for i in range(15)] for i in range(15)]
 
 jetons_pts = {"A":1,"B":3,"C":3,"D":2,"E":1,"F":4,"G":2,"H":4, "I":1, 
               "J":8,"K":10,"L":1,"M":2,"N":1,"O":1,"P":3,"Q":8,"R":1, 
@@ -46,6 +46,15 @@ plateau = {(0,0):('m',3), (0,7):('m',3), (0,14):('m',3), (7,0):('m',3),
            (12,6):('l',2), (12,8):('l',2), (14,3):('l',2), (14,11):('l',2)}
 
 jetons_p1 = []
+
+title = [' .d8888b.   .d8888b.  8888888b.         d8888 888888b.   888888b.   888      8888888888 ',
+         'd88P  Y88b d88P  Y88b 888   Y88b       d88888 888  "88b  888  "88b  888      888       ',
+         'Y88b.      888    888 888    888      d88P888 888  .88P  888  .88P  888      888 ',
+         ' "Y888b.   888        888   d88P     d88P 888 8888888K.  8888888K.  888      8888888   ',
+         '    "Y88b. 888        8888888P"     d88P  888 888  "Y88b 888  "Y88b 888      888    ',
+         '      "888 888    888 888 T88b     d88P   888 888    888 888    888 888      888  ',
+         'Y88b  d88P Y88b  d88P 888  T88b   d8888888888 888   d88P 888   d88P 888      888       ',
+         ' "Y8888P"   "Y8888P"  888   T88b d88P     888 8888888P"  8888888P"  88888888 8888888888']
 
 #creat bag which we will pull from to get letters
 bag = []
@@ -99,11 +108,88 @@ def print_board():
         for element in row:
             print(element, end='')
         print()
+    print()
     print('There are',len(bag),'letters left in the bag.')
+    
+def title_screen():
+    global num_players, score_board
+    for line in title:
+        print(line)
+    print(('\n')*2)
+    begin = (str(input((' ')*35+'Begin? ')))
+    print(('\n')*2)
+    
+    #Gets number of players
+    num_players = 0
+    while num_players < 1:
+        try:
+            num_players = int(input('How many players? '))
+        except:
+            print("I'm sorry, that is not a valid number of players.")
+            
+    #Initializes the score board with the correct number of rows and columns
+    score_board = [['0' for i in range(num_players)] for i in range(2)]
+    
+    #Adds player names to the first row
+    for i in range(num_players):
+        score_board[0][i] = (input('Name of Player '+str(i+1)+'? '))
+    print(('\n')*2)
+    
+def print_score():
+    print()
+    #Finds the length that the score board will be
+    len_row = 0
+    temp_len = 0
+
+    #Checks len of first row
+    for i in range(len(score_board[0])):
+        len_row += len(score_board[0][i])
+        
+    #Checks len of second row
+    for i in range(len(score_board[1])):
+        temp_len += len(score_board[1][i])
+        
+    #If seecond row is bigget takes second row length
+    if temp_len > len_row:
+        len_row = temp_len
+
+    len_row += (len(score_board[0])*3)
+    line = (('+')+('-')*(len_row)+('+'))
+
+    #Finds length on each column
+    len_columns = [' ' for i in range(num_players)]
+    temp_row0 = 0
+    temp_row1 = 0
+    for i in range(len(score_board[0])):
+        temp_row0 = len(score_board[0][i])
+        temp_row1 = len(score_board[1][i])
+        if temp_row0 > temp_row1:
+            len_columns[i] = temp_row0+1
+        else:
+            len_columns[i] = temp_row1+1
+                
+    #Prints the score board
+    print('SCOREBOARD')
+    print(line)
+    for i in range(len(score_board)):
+        for j in range(len(score_board[0])):
+            el = ('| '+str(score_board[i][j])+' '*(len_columns[j]-len(score_board[i][j])))
+            print(el, end="")
+        print('|')
+        print(line)
+    print()
 
 #PROGRAMME ------------------------------------------------------------------------------
     
+title_screen()
+
 initialise_jetons()
 initialise_board()
+
+print("ROUND 1 - PLAYER 1\n")
 print_board()
+print_score()
+print("LETTERS")
 print(jetons_p1)
+
+

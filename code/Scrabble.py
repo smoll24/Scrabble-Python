@@ -16,7 +16,7 @@ couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m",'bg_blanc':'\u001b[47m
 couleurs_loc= {"m2":couleur['bg_magenta'],"m3":couleur['bg_rouge'],"l2":couleur['bg_cyan'],"l3":couleur['bg_bleu']}
 
 #Initialise board with colors
-board = [['  'for i in range(15)] for i in range(15)]
+board = [[couleur['bg_noir']+'  '+couleur['clear'] for i in range(15)] for i in range(15)]
 
 jetons_pts = {"A":1,"B":3,"C":3,"D":2,"E":1,"F":4,"G":2,"H":4, "I":1, 
               "J":8,"K":10,"L":1,"M":2,"N":1,"O":1,"P":3,"Q":8,"R":1, 
@@ -116,9 +116,9 @@ def title_screen():
     for line in title:
         print(line)
     print(('\n')*2)
-    begin = (str(input((' ')*35+'Begin? ')))
+    begin = input((' ')*35+'Begin? ')
     print(('\n')*2)
-    
+        
     #Gets number of players
     num_players = 0
     while num_players < 1:
@@ -132,7 +132,7 @@ def title_screen():
     
     #Adds player names to the first row
     for i in range(num_players):
-        score_board[0][i] = (input('Name of Player '+str(i+1)+'? '))
+        score_board[0][i] = input('Name of Player '+str(i+1)+'? ')
     print(('\n')*2)
     
 def print_score():
@@ -191,5 +191,3 @@ print_board()
 print_score()
 print("LETTERS")
 print(jetons_p1)
-
-

@@ -64,8 +64,26 @@ for let, nb in jetons_nbre.items():
 
 #DEFINITION DES FONCTIONS ---------------------------------------------------------------
 
+def initialise_jetons():
+    '''Randomly distributes jetons for the start'''
+    for i in range(7):
+        #Picks a random jetons from the bag
+        jeton_rnd = random.choice(bag)
+        jetons_p1.append(jeton_rnd)
+        bag.remove(jeton_rnd)
+
+def initialise_board():
+    '''Adds the multipleir squares onto the board'''
+    #add in multiplier squares and colors
+    for cord, value in plateau.items():
+        i, j = cord
+        val = value[0]+str(value[1])
+        board[i][j] = couleur['txt_blanc']+couleurs_loc[str(val)]+val+couleur['clear']
+
 def mot_valide(mot):
-    
+    '''Check if a word is valid for Scrabble
+    Input: mot - string of letters
+    Returns: bool'''
     if len(mot) < 2:
         return False
     
@@ -78,37 +96,8 @@ def mot_valide(mot):
         
     return True
     
-def initialise_jetons():
-    for i in range(7):
-        #Picks a random jetons from the bag
-        jeton_rnd = random.choice(bag)
-        jetons_p1.append(jeton_rnd)
-        bag.remove(jeton_rnd)
-
-def initialise_board():
-    #add in multiplier squares and colors
-    for cord, value in plateau.items():
-        i, j = cord
-        val = value[0]+str(value[1])
-        board[i][j] = couleur['txt_blanc']+couleurs_loc[str(val)]+val+couleur['clear']
-
-def place_let(let,cord):
-    x = cord[0]
-    y = cord[1]
-    board[y][x] = couleur['txt_noir']+couleur['bg_blanc']+let.upper()+' '+couleur['clear']
-
-def print_board():
-    print('  ',end='')
-    for i in range(15):
-        print(' '+chr(i+97), end = '')
-    print()
-    for i,row in enumerate(board):
-        print(str(i+1).rjust(2), end = '')
-        for element in row:
-            print(element, end='')
-        print()
-    
 def title_screen():
+    '''Initialises the game and displays the title'''
     global num_players, score_board
     for line in title:
         print(line)
@@ -131,8 +120,21 @@ def title_screen():
     for i in range(num_players):
         score_board[0][i] = input('Name of Player '+str(i+1)+'? ')
     print(('\n')*2)
-    
+
+def print_board():
+    '''Prints out the board'''
+    print('  ',end='')
+    for i in range(15):
+        print(' '+chr(i+97), end = '')
+    print()
+    for i,row in enumerate(board):
+        print(str(i+1).rjust(2), end = '')
+        for element in row:
+            print(element, end='')
+        print()
+
 def print_score():
+    '''Prints the score and scoreboard'''
     print()
     #Finds the length that the score board will be
     len_row = 0
@@ -177,9 +179,18 @@ def print_score():
     print()
     
 def print_letters():
+    '''Prints out the player's letters and letter count in bag'''
     print('There are',len(bag),'letters left in the bag.\n')
     print("LETTERS")
     print(jetons_p1)
+
+def place_let(let,cord):
+    '''Places a letter on the board
+    Input: let - single chr string that isalpha
+           cord - tuple countaining two ints (x,y)'''
+    x = cord[0]
+    y = cord[1]
+    board[y][x] = couleur['txt_noir']+couleur['bg_blanc']+let.upper()+' '+couleur['clear']
 
 def user_input():
     while True:

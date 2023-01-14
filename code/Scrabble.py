@@ -180,12 +180,11 @@ def print_score():
     print()
 
 def user_input():
-    alphabet='abcdefghijklmnopqrstuvwxyz'
-    mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
-    for elt in mot:
-        if alphabet.find(elt) == -1: #checks if the letter is not part of the alphabet
-            return False
-    return True
+    while True:
+        mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
+        if mot.isalpha(): #checks if the letter is not part of the alphabet
+            break
+    return mot
 
 #PROGRAMME ------------------------------------------------------------------------------
     

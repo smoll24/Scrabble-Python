@@ -11,7 +11,12 @@ except:
 
 #DEFINITION DES VARIABLES ------------------------------------------------------------
 
-board = [["\u001b[40m  \033[0m\u001b[30m" for i in range(15)] for i in range(15)]
+#Dictionaries with ANSI color escape codes
+couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m",'bg_blanc':'\u001b[47m','txt_noir':'\u001b[30m',"bg_magenta":"\u001b[45m","bg_cyan":"\u001b[46m","bg_bleu":"\u001b[44m","txt_blanc":"\u001b[37m","clear":"\033[0m"}
+couleurs_loc= {"m2":couleur['bg_magenta'],"m3":couleur['bg_rouge'],"l2":couleur['bg_cyan'],"l3":couleur['bg_bleu']}
+
+#Initialise board with colors
+board = [[couleur['bg_noir']+'  '+couleur['clear'] for i in range(15)] for i in range(15)]
 
 jetons_pts = {"A":1,"B":3,"C":3,"D":2,"E":1,"F":4,"G":2,"H":4, "I":1, 
               "J":8,"K":10,"L":1,"M":2,"N":1,"O":1,"P":3,"Q":8,"R":1, 
@@ -40,7 +45,6 @@ plateau = {(0,0):('m',3), (0,7):('m',3), (0,14):('m',3), (7,0):('m',3),
            (8,12):('l',2), (11,0):('l',2), (11,7):('l',2), (11,14):('l',2), 
            (12,6):('l',2), (12,8):('l',2), (14,3):('l',2), (14,11):('l',2)}
 
-couleurs = {"m2":"\u001b[45m","m3":"\u001b[41m","l2":"\u001b[46m","l3":"\u001b[44m"}
 jetons_p1 = []
 
 #creat bag which we will pull from to get letters
@@ -65,7 +69,6 @@ def mot_valide(mot):
         
     return True
     
-    
 def initialise_jetons():
     for i in range(7):
         #Vérifie que le nombre de jetons de la lettre choisie est plus grand que 0
@@ -79,12 +82,12 @@ def initialise_board():
     for cord, value in plateau.items():
         i, j = cord
         val = value[0]+str(value[1])
-        board[i][j] = "\u001b[37m"+couleurs[str(val)]+val+"\033[0m\u001b[30m"
+        board[i][j] = couleur['txt_blanc']+couleurs_loc[str(val)]+val+couleur['clear']
 
 def place_let(let,cord):
     x = cord[0]
     y = cord[1]
-    board[y][x] = '\u001b[47m'+let.upper()+' \033[0m'
+    board[y][x] = couleur['txt_noir']+couleur['bg_blanc']+let.upper()+' '+couleur['clear']
 
 def print_board():
     print('  ',end='')
@@ -99,6 +102,7 @@ def print_board():
     print('There are',len(bag),'letters left in the bag.')
 
 #PROGRAMME ------------------------------------------------------------------------------
+    
 initialise_jetons()
 initialise_board()
 print_board()

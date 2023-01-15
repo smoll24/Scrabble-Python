@@ -77,6 +77,7 @@ def initialise_board():
         board[i][j] = val
 
 def initialise_letters():
+    '''Randomly distributes jetons for the start'''
     for player in range(len(score_board[0])):
         temp_jetons = []
         for i in range(7):

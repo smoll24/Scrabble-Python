@@ -15,8 +15,9 @@ except:
 couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m","bg_yellow":"\u001b[43m",'bg_blanc':'\u001b[47m',"bg_magenta":"\u001b[45m","bg_cyan":"\u001b[46m","bg_bleu":"\u001b[44m",
            'txt_noir':'\u001b[30m',"txt_blanc":"\u001b[37m","clear":"\033[0m"}
 couleurs_loc= {"m2":couleur['bg_magenta'],"m3":couleur['bg_rouge'],"l2":couleur['bg_cyan'],"l3":couleur['bg_bleu']}
-current_round = 0
-current_player = 0
+
+current_round = 1
+current_player = 1
 
 #Initialise board with colors
 board = [['  ' for i in range(15)] for i in range(15)]
@@ -275,6 +276,7 @@ def test_word(word,cord,direct):
     return True
 
 def user_input():
+    print()
     while True:
         mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
         if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
@@ -297,12 +299,19 @@ def user_input():
     direct = True if orientation == 'right' else False
     return word,cord,direct
 
+def print_round():
+    print()
+    global current_round, current_player, score_board
+    print("ROUND",current_round,"- PLAYER",current_player,"\n")
+    current_round += 1
+    current_player = (current_player % len(score_board[0]))+1
+
 def test_game():
     while True:
-        print("ROUND 1 - PLAYER 1\n")
+        print_round()
         print_board()
         print_score()
-        print_letters()
+        print_letters() 
 
         word,cord,direct = user_input()
         if test_word(word,cord,direct) == False:
@@ -317,7 +326,7 @@ title_screen()
 
 initialise_board()
 
-print("ROUND 1 - PLAYER 1\n")
+print_round()
 print_board()
 print_score()
 print_letters()

@@ -247,7 +247,7 @@ def test_word(word,cord,direct):
         else:
             new_table[(x,y)] = let
     
-    #check that they have the jetons
+    #check that they have the jetons --DOESN"T FULLY WORK YET IN PROGRESS
     check = all(item in jetons_p1 for item in new_table.values())
     if not check:
         return False
@@ -299,7 +299,15 @@ title_screen()
 initialise_jetons()
 initialise_board()
 
+#while True:
 print("ROUND 1 - PLAYER 1\n")
 print_board()
 print_score()
 print_letters()
+
+    #word,cord,direct = user_input()
+    #if test_word(word,cord,direct) == False:
+    #    continue
+    #ans = input('Would you like to place the word (y,n): ')
+    #if ans == 'y':
+    #    place_word(word,cord,direct)

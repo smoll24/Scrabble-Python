@@ -4,8 +4,8 @@ Instructions:
 - download code
 - unzip enchant
 
-# Scrabble Python (French)
-This is a Python implementation of the popular word game Scrabble. The game can be played in the Python shell, and it features a large dictionary of French words to choose from.
+# Scrabble Python 
+This is a French Python implementation of the popular word game Scrabble. The game can be played in the Python shell, and it features a large dictionary of French words to choose from.
 
 ### Getting Started
 To start playing the game, simply clone or download this repository and run the scrabble.py file in your Python environment. You will be prompted to enter the number of players and their names, and then the game will begin.

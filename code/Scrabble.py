@@ -222,7 +222,19 @@ def user_input():
         mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
         if mot.isalpha(): #checks if the letter is not part of the alphabet
             break
-    return mot
+    
+    while True:
+        range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
+        range_letters='abcdefghijklmno'
+        location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1): ")
+        if len(location)<=3: 
+            if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
+                break
+    while True:
+        orientation = input("Saissisez une orientation right/down pour votre mot: ")
+        if orientation == 'right' or orientation=='down':
+            break
+    return mot,location,orientation
 
 #PROGRAMME ------------------------------------------------------------------------------
     

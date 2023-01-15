@@ -12,11 +12,12 @@ except:
 #DEFINITION DES VARIABLES ------------------------------------------------------------
 
 #Dictionaries with ANSI color escape codes
-couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m",'bg_blanc':'\u001b[47m','txt_noir':'\u001b[30m',"bg_magenta":"\u001b[45m","bg_cyan":"\u001b[46m","bg_bleu":"\u001b[44m","txt_blanc":"\u001b[37m","clear":"\033[0m"}
+couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m","bg_yellow":"\u001b[43m",'bg_blanc':'\u001b[47m',"bg_magenta":"\u001b[45m","bg_cyan":"\u001b[46m","bg_bleu":"\u001b[44m",
+           'txt_noir':'\u001b[30m',"txt_blanc":"\u001b[37m","clear":"\033[0m"}
 couleurs_loc= {"m2":couleur['bg_magenta'],"m3":couleur['bg_rouge'],"l2":couleur['bg_cyan'],"l3":couleur['bg_bleu']}
 
 #Initialise board with colors
-board = [[couleur['bg_noir']+'  '+couleur['clear'] for i in range(15)] for i in range(15)]
+board = [['  ' for i in range(15)] for i in range(15)]
 
 jetons_pts = {"A":1,"B":3,"C":3,"D":2,"E":1,"F":4,"G":2,"H":4, "I":1, 
               "J":8,"K":10,"L":1,"M":2,"N":1,"O":1,"P":3,"Q":8,"R":1, 
@@ -78,7 +79,7 @@ def initialise_board():
     for cord, value in plateau.items():
         i, j = cord
         val = value[0]+str(value[1])
-        board[i][j] = couleur['txt_blanc']+couleurs_loc[str(val)]+val+couleur['clear']
+        board[i][j] = val
 
 def mot_valide(mot):
     '''Check if a word is valid for Scrabble
@@ -121,6 +122,21 @@ def title_screen():
         score_board[0][i] = input('Name of Player '+str(i+1)+'? ')
     print(('\n')*2)
 
+def color_elt(elt):
+    '''Adds color to a board element
+    Input: elt - string
+    Returns: new_elt - string'''
+    new_elt = ''
+    
+    if elt.isspace(): #backgroung
+        new_elt = new_elt= couleur['bg_noir']+elt+couleur['clear']
+    elif elt.islower(): #multipliers
+        new_elt = couleur['txt_blanc']+couleurs_loc[elt]+elt+couleur['clear']
+    elif elt.isupper():
+        new_elt = couleur['txt_noir']+couleur['bg_blanc']+elt+couleur['clear']
+    return new_elt
+        
+
 def print_board():
     '''Prints out the board'''
     print('  ',end='')
@@ -130,7 +146,7 @@ def print_board():
     for i,row in enumerate(board):
         print(str(i+1).rjust(2), end = '')
         for element in row:
-            print(element, end='')
+            print(color_elt(element), end='')
         print()
 
 def print_score():
@@ -190,7 +206,7 @@ def place_let(let, cord):
            cord - tuple countaining two ints (x,y)'''
     x = cord[0]
     y = cord[1]
-    board[y][x] = couleur['txt_noir']+couleur['bg_blanc']+let.upper()+' '+couleur['clear']
+    board[y][x] = let.upper()+' '
 
 def get_word_table(word, cord, direct):
     '''Creates a dict of all the letter's cordinates in a word
@@ -216,7 +232,43 @@ def place_word(word, cord, direct):
     word_table = get_word_table(word, cord, direct)
     for cord, let in word_table.items():
         place_let(let,cord)
-        
+
+def test_word(word,cord,direct):
+    word_table = get_word_table(word,cord,direct)
+    
+    #test location and creat new_table containing all the required jetons
+    new_table = {}
+    for cord,let in word_table.items():
+        x = cord[0]
+        y = cord[1]
+        if board[y][x][0].isupper(): #if it is a jeton
+            if board[y][x][0] != let: #[0] cuz only the letter
+                return False
+        else:
+            new_table[(x,y)] = let
+    
+    #check that they have the jetons
+    check = all(item in jetons_p1 for item in new_table.values())
+    if not check:
+        return False
+    
+    #preview board
+    print('  ',end='')
+    for i in range(15):
+        print(' '+chr(i+97), end = '')
+    print()
+    for y,row in enumerate(board):
+        print(str(y+1).rjust(2), end = '')
+        for x,elt in enumerate(row):
+            if (x,y) in new_table:
+                let = new_table[(x,y)]
+                print(couleur['bg_yellow']+let+' '+couleur['clear'], end='')
+            else:
+                print(color_elt(elt), end='')
+        print()
+    
+    return True
+
 def user_input():
     while True:
         mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")

@@ -331,10 +331,11 @@ def test_game():
         print_board()
         print_score()
         print_letters() 
-
-        word,cord,direct = user_input()
-        if test_word(word,cord,direct) == False:
-            continue
+        
+        while True:
+            word,cord,direct = user_input()
+            if test_word(word,cord,direct):
+                break
         ans = input('Would you like to place the word (y,n): ')
         if ans == 'y':
             place_word(word,cord,direct)

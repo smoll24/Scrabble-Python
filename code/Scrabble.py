@@ -235,6 +235,7 @@ def place_word(word, cord, direct):
 
 def test_word(word,cord,direct):
     word_table = get_word_table(word,cord,direct)
+    valide = True
     
     #test location and creat new_table containing all the required jetons
     new_table = {}
@@ -243,7 +244,7 @@ def test_word(word,cord,direct):
         y = cord[1]
         if board[y][x][0].isupper(): #if it is a jeton
             if board[y][x][0] != let: #[0] cuz only the letter
-                return False
+                valide = False
         else:
             new_table[(x,y)] = let
     
@@ -262,15 +263,18 @@ def test_word(word,cord,direct):
         for x,elt in enumerate(row):
             if (x,y) in word_table:
                 let = word_table[(x,y)]
-                if board[y][x][0].isupper(): #if it is a jeton
-                    print(couleur['txt_noir']+couleur['bg_vert']+let+' '+couleur['clear'], end='')
+                if elt[0].isupper(): #if it is a jeton
+                    if elt[0] == let:
+                        print(couleur['txt_noir']+couleur['bg_vert']+let+' '+couleur['clear'], end='')
+                    else:
+                        print(couleur['txt_blanc']+couleur['bg_rouge']+'XX'+couleur['clear'], end='')
                 else:
                     print(couleur['txt_noir']+couleur['bg_jaune']+let+' '+couleur['clear'], end='')
             else:
                 print(color_elt(elt), end='')
         print()
     
-    return True
+    return valide
 
 def user_input():
     while True:
@@ -301,10 +305,11 @@ def test_game():
         print_board()
         print_score()
         print_letters()
-
-        word,cord,direct = user_input()
-        if test_word(word,cord,direct) == False:
-            continue
+        
+        while True:
+            word,cord,direct = user_input()
+            if test_word(word,cord,direct) == True:
+                break
         ans = input('Would you like to place the word (y,n): ')
         if ans == 'y':
             place_word(word,cord,direct)

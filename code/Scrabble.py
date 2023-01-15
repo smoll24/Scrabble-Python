@@ -234,7 +234,11 @@ def user_input():
         orientation = input("Saissisez une orientation right/down pour votre mot: ")
         if orientation == 'right' or orientation=='down':
             break
-    return mot,location,orientation
+    
+    word = mot.upper()
+    cord = (range_letters.find(location[0]),int(location[1])-1)
+    direct = True if 'right' else False
+    return word,cord,direct
 
 #PROGRAMME ------------------------------------------------------------------------------
     

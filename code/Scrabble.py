@@ -85,7 +85,7 @@ def mot_valide(mot):
     '''Check if a word is valid for Scrabble
     Input: mot - string of letters
     Returns: bool'''
-    if len(mot) < 2:
+    if len(mot) < 2 or len(mot) > 7:
         return False
     
     try:
@@ -93,7 +93,7 @@ def mot_valide(mot):
         if not french_dict.check(mot):
             return False
     except:
-        print('Error with spellcheck')
+        print('No spellcheck')
         
     return True
     
@@ -272,7 +272,7 @@ def test_word(word,cord,direct):
 def user_input():
     while True:
         mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
-        if mot.isalpha(): #checks if the letter is not part of the alphabet
+        if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
             break
     
     while True:
@@ -289,8 +289,22 @@ def user_input():
     
     word = mot.upper()
     cord = (range_letters.find(location[0]),int(location[1])-1)
-    direct = True if 'right' else False
+    direct = True if orientation == 'right' else False
     return word,cord,direct
+
+def test_game():
+    while True:
+        print("ROUND 1 - PLAYER 1\n")
+        print_board()
+        print_score()
+        print_letters()
+
+        word,cord,direct = user_input()
+        if test_word(word,cord,direct) == False:
+            continue
+        ans = input('Would you like to place the word (y,n): ')
+        if ans == 'y':
+            place_word(word,cord,direct)
 
 #PROGRAMME ------------------------------------------------------------------------------
     
@@ -299,15 +313,7 @@ title_screen()
 initialise_jetons()
 initialise_board()
 
-#while True:
 print("ROUND 1 - PLAYER 1\n")
 print_board()
 print_score()
 print_letters()
-
-    #word,cord,direct = user_input()
-    #if test_word(word,cord,direct) == False:
-    #    continue
-    #ans = input('Would you like to place the word (y,n): ')
-    #if ans == 'y':
-    #    place_word(word,cord,direct)

@@ -15,6 +15,8 @@ except:
 couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m","bg_yellow":"\u001b[43m",'bg_blanc':'\u001b[47m',"bg_magenta":"\u001b[45m","bg_cyan":"\u001b[46m","bg_bleu":"\u001b[44m",
            'txt_noir':'\u001b[30m',"txt_blanc":"\u001b[37m","clear":"\033[0m"}
 couleurs_loc= {"m2":couleur['bg_magenta'],"m3":couleur['bg_rouge'],"l2":couleur['bg_cyan'],"l3":couleur['bg_bleu']}
+current_round = 0
+current_player = 0
 
 #Initialise board with colors
 board = [['  ' for i in range(15)] for i in range(15)]
@@ -65,14 +67,6 @@ for let, nb in jetons_nbre.items():
 
 #DEFINITION DES FONCTIONS ---------------------------------------------------------------
 
-def initialise_jetons():
-    '''Randomly distributes jetons for the start'''
-    for i in range(7):
-        #Picks a random jetons from the bag
-        jeton_rnd = random.choice(bag)
-        jetons_p1.append(jeton_rnd)
-        bag.remove(jeton_rnd)
-
 def initialise_board():
     '''Adds the multipleir squares onto the board'''
     #add in multiplier squares and colors
@@ -85,7 +79,7 @@ def mot_valide(mot):
     '''Check if a word is valid for Scrabble
     Input: mot - string of letters
     Returns: bool'''
-    if len(mot) < 2 or len(mot) > 7:
+    if len(mot) < 2:
         return False
     
     try:
@@ -196,7 +190,18 @@ def print_score():
     
 def print_letters():
     '''Prints out the player's letters and letter count in bag'''
+    
+    #Distributes random letters for players
+    if len(jetons_p1) < 7:
+        for i in range(7-len(jetons_p1)):
+            #Picks a random jetons from the bag
+            jeton_rnd = random.choice(bag)
+            jetons_p1.append(jeton_rnd)
+            bag.remove(jeton_rnd)
+    
     print('There are',len(bag),'letters left in the bag.\n')
+
+    
     print("LETTERS")
     print(jetons_p1)
 
@@ -247,7 +252,7 @@ def test_word(word,cord,direct):
         else:
             new_table[(x,y)] = let
     
-    #check that they have the jetons --DOESN"T FULLY WORK YET IN PROGRESS
+    #check that they have the jetons --DOESN"T FULLY WORK YET IN PROGRESS check that less than 8
     check = all(item in jetons_p1 for item in new_table.values())
     if not check:
         return False
@@ -310,7 +315,6 @@ def test_game():
     
 title_screen()
 
-initialise_jetons()
 initialise_board()
 
 print("ROUND 1 - PLAYER 1\n")

@@ -1,6 +1,6 @@
 # scrabble_python
 
-Instrucitons:
+Instructions:
 - download code
 - unzip enchant
 
@@ -9,6 +9,8 @@ This is a Python implementation of the popular word game Scrabble. The game can 
 
 ### Getting Started
 To start playing the game, simply clone or download this repository and run the scrabble.py file in your Python environment. You will be prompted to enter the number of players and their names, and then the game will begin.
+
+For full functionality, install the PyEnchant library, unzip the provided 'enchant' folder, and give Python the path to the folder. 
 
 ### Gameplay
 Each round, players will draw seven letters from the Scrabble tile bag and use them to create words on the board. Points are awarded based on the length and complexity of the words created. The player with the most points at the end of the game wins.

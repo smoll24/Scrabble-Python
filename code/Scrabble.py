@@ -12,12 +12,9 @@ except:
 #DEFINITION DES VARIABLES ------------------------------------------------------------
 
 #Dictionaries with ANSI color escape codes
-couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m","bg_yellow":"\u001b[43m",'bg_blanc':'\u001b[47m',"bg_magenta":"\u001b[45m","bg_cyan":"\u001b[46m","bg_bleu":"\u001b[44m",
+couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m","bg_jaune":"\u001b[43m","bg_vert":"\u001b[42m",'bg_blanc':'\u001b[47m',"bg_magenta":"\u001b[45m","bg_cyan":"\u001b[46m","bg_bleu":"\u001b[44m",
            'txt_noir':'\u001b[30m',"txt_blanc":"\u001b[37m","clear":"\033[0m"}
 couleurs_loc= {"m2":couleur['bg_magenta'],"m3":couleur['bg_rouge'],"l2":couleur['bg_cyan'],"l3":couleur['bg_bleu']}
-
-current_round = 0
-current_player = 0
 
 #Initialise board with colors
 board = [['  ' for i in range(15)] for i in range(15)]
@@ -49,6 +46,8 @@ plateau = {(0,0):('m',3), (0,7):('m',3), (0,14):('m',3), (7,0):('m',3),
            (8,12):('l',2), (11,0):('l',2), (11,7):('l',2), (11,14):('l',2), 
            (12,6):('l',2), (12,8):('l',2), (14,3):('l',2), (14,11):('l',2)}
 
+jetons_p1 = []
+
 title = [' .d8888b.   .d8888b.  8888888b.         d8888 888888b.   888888b.   888      8888888888 ',
          'd88P  Y88b d88P  Y88b 888   Y88b       d88888 888  "88b  888  "88b  888      888       ',
          'Y88b.      888    888 888    888      d88P888 888  .88P  888  .88P  888      888 ',
@@ -63,10 +62,16 @@ bag = []
 for let, nb in jetons_nbre.items():
     for i in range(nb):
         bag.append(let)
-        
-jetons_joueurs = {}
 
 #DEFINITION DES FONCTIONS ---------------------------------------------------------------
+
+def initialise_jetons():
+    '''Randomly distributes jetons for the start'''
+    for i in range(7):
+        #Picks a random jetons from the bag
+        jeton_rnd = random.choice(bag)
+        jetons_p1.append(jeton_rnd)
+        bag.remove(jeton_rnd)
 
 def initialise_board():
     '''Adds the multipleir squares onto the board'''
@@ -76,22 +81,11 @@ def initialise_board():
         val = value[0]+str(value[1])
         board[i][j] = val
 
-def initialise_letters():
-    '''Randomly distributes jetons for the start'''
-    for player in range(len(score_board[0])):
-        temp_jetons = []
-        for i in range(7):
-            #Picks a random jetons from the bag
-            jeton_rnd = random.choice(bag)
-            temp_jetons.append(jeton_rnd)
-            bag.remove(jeton_rnd)
-        jetons_joueurs[player] = temp_jetons
-    
 def mot_valide(mot):
     '''Check if a word is valid for Scrabble
     Input: mot - string of letters
     Returns: bool'''
-    if len(mot) < 2:
+    if len(mot) < 2 or len(mot) > 7:
         return False
     
     try:
@@ -202,20 +196,9 @@ def print_score():
     
 def print_letters():
     '''Prints out the player's letters and letter count in bag'''
-    
-    #Distributes random letters for players
-    if len(jetons_joueurs[current_player-1]) < 7:
-        for i in range(7-len(jetons_joueurs[current_player-1])):
-            #Picks a random jetons from the bag
-            jeton_rnd = random.choice(bag)
-            jetons_joueurs[current_player-1].append(jeton_rnd)
-            bag.remove(jeton_rnd)
-    
     print('There are',len(bag),'letters left in the bag.\n')
-
-    
-    print("LETTRES DE PLAYER",current_player)
-    print(jetons_joueurs[current_player-1])
+    print("LETTERS")
+    print(jetons_p1)
 
 def place_let(let, cord):
     '''Places a letter on the board
@@ -264,8 +247,8 @@ def test_word(word,cord,direct):
         else:
             new_table[(x,y)] = let
     
-    #check that they have the jetons --DOESN"T FULLY WORK YET IN PROGRESS check that less than 8
-    check = all(item in jetons_joueurs[current_player-1] for item in new_table.values())
+    #check that they have the jetons --DOESN"T FULLY WORK YET IN PROGRESS
+    check = all(item in jetons_p1 for item in new_table.values())
     if not check:
         return False
     
@@ -277,9 +260,12 @@ def test_word(word,cord,direct):
     for y,row in enumerate(board):
         print(str(y+1).rjust(2), end = '')
         for x,elt in enumerate(row):
-            if (x,y) in new_table:
-                let = new_table[(x,y)]
-                print(couleur['bg_yellow']+let+' '+couleur['clear'], end='')
+            if (x,y) in word_table:
+                let = word_table[(x,y)]
+                if board[y][x][0].isupper(): #if it is a jeton
+                    print(couleur['txt_noir']+couleur['bg_vert']+let+' '+couleur['clear'], end='')
+                else:
+                    print(couleur['txt_noir']+couleur['bg_jaune']+let+' '+couleur['clear'], end='')
             else:
                 print(color_elt(elt), end='')
         print()
@@ -287,7 +273,6 @@ def test_word(word,cord,direct):
     return True
 
 def user_input():
-    print()
     while True:
         mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
         if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
@@ -310,19 +295,12 @@ def user_input():
     direct = True if orientation == 'right' else False
     return word,cord,direct
 
-def print_round():
-    print()
-    global current_round, current_player, score_board
-    current_round += 1
-    current_player = (current_player % len(score_board[0]))+1
-    print("ROUND",current_round,"- PLAYER",current_player,"\n")
-
 def test_game():
     while True:
-        print_round()
+        print("ROUND 1 - PLAYER 1\n")
         print_board()
         print_score()
-        print_letters() 
+        print_letters()
 
         word,cord,direct = user_input()
         if test_word(word,cord,direct) == False:
@@ -335,10 +313,10 @@ def test_game():
     
 title_screen()
 
+initialise_jetons()
 initialise_board()
 
-print_round()
-initialise_letters()
+print("ROUND 1 - PLAYER 1\n")
 print_board()
 print_score()
 print_letters()

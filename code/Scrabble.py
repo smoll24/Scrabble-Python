@@ -364,7 +364,7 @@ def test_game():
             place_word(word,cord,direct)
 
 
-def winner():
+def final_scores():
     '''Function called if both players skip their turn and they answer 'yes' to stopping game'''
     #Makes a new list with the scores in the form of ints
     scores = [int(x) for x in score_board[1]]

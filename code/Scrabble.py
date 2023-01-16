@@ -338,7 +338,7 @@ def user_input():
             break
     
     word = mot.upper()
-    cord = (range_letters.find(location[0]),int(location[1])-1)
+    cord = (range_letters.find(location[0]),int(location[1:])-1)
     direct = True if orientation == 'right' else False
     return word,cord,direct
 

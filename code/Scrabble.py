@@ -199,7 +199,15 @@ def print_score():
         print('|')
         print(line)
     print()
-    
+
+def score():
+    user_input()
+    total = 0
+    for elt in word:
+        num = jetons_pts[elt]
+        total = total + num 
+    return total
+
 def print_letters():
     '''Prints out the player's letters and letter count in bag'''
     
@@ -312,7 +320,7 @@ def user_input():
         orientation = input("Saissisez une orientation right/down pour votre mot: ")
         if orientation == 'right' or orientation=='down':
             break
-    
+    global word
     word = mot.upper()
     cord = (range_letters.find(location[0]),int(location[1])-1)
     direct = True if orientation == 'right' else False

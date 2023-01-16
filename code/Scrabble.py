@@ -363,6 +363,49 @@ def test_game():
         if ans == 'y':
             place_word(word,cord,direct)
 
+
+def winner():
+    '''Function called if both players skip their turn and they answer 'yes' to stopping game'''
+    #Makes a new list with the scores in the form of ints
+    scores = [int(x) for x in score_board[1]]
+    
+    #Subtracts the amount of letters the players have left from their scores
+    for i in range(len(score_board[0])):
+        #If a player has used all of their letters, the sum of the other players' unplayed letters is added to that player's score
+        if len(jetons_joueurs[i]) == 0:
+            for j in range(len(jetons_joueurs)):
+                if i != j:
+                    scores[i] += len(jetons_joueurs[j])
+            else:
+                if scores[i] > 0:
+                    scores[i] -= len(jetons_joueurs[i])
+    
+    #Puts the new scores back into the board and prints them
+    for i in range(len(score_board[0])):
+        score_board[1][i] = str(scores[i])
+    print('GAME OVER!')
+    print('The final scores are:')
+    print_score()
+    
+    #Finds the best score and if there is a tie
+    best_score = max(scores)
+    best_count = scores.count(best_score)
+    
+    #If there is a tie, find and print the winners
+    if best_count > 1:
+        winners = []
+        for i,score in enumerate(score_board[1]):
+            if int(score) == best_score:
+                winners.append(score_board[0][i])
+                
+        winners[-1] = 'and '+str(winners[-1])
+        print('The game is tied. The winners are '+(", ".join(str(x) for x in winners))+'!')
+    
+    #If there is no tie, print the winner
+    else:
+        winner = score_board[0][scores.index(best_score)]
+        print('The winner is '+winner+'!')
+
 #PROGRAMME ------------------------------------------------------------------------------
     
 title_screen()

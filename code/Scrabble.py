@@ -222,12 +222,13 @@ def print_letters():
     '''Prints out the player's letters and letter count in bag'''
     
     #Distributes random letters for players
-    if len(jetons_joueurs[current_player-1]) < 7:
-        for i in range(7-len(jetons_joueurs[current_player-1])):
-            #Picks a random jetons from the bag
-            jeton_rnd = random.choice(bag)
-            jetons_joueurs[current_player-1].append(jeton_rnd)
-            bag.remove(jeton_rnd)
+    if len(bag) > 0:
+        if len(jetons_joueurs[current_player-1]) < 7:
+            for i in range(7-len(jetons_joueurs[current_player-1])):
+                #Picks a random jetons from the bag
+                jeton_rnd = random.choice(bag)
+                jetons_joueurs[current_player-1].append(jeton_rnd)
+                bag.remove(jeton_rnd)
     
     print('There are',len(bag),'letters left in the bag.\n')
 

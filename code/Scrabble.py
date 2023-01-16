@@ -200,8 +200,7 @@ def print_score():
         print(line)
     print()
 
-def score():
-    user_input()
+def score(word):
     total = 0
     for elt in word:
         num = jetons_pts[elt]
@@ -320,7 +319,7 @@ def user_input():
         orientation = input("Saissisez une orientation right/down pour votre mot: ")
         if orientation == 'right' or orientation=='down':
             break
-    global word
+    
     word = mot.upper()
     cord = (range_letters.find(location[0]),int(location[1])-1)
     direct = True if orientation == 'right' else False

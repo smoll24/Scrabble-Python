@@ -310,8 +310,9 @@ def test_word(word,cord,direct):
         print()
     
     #Calculate points
-    pts = score(word_table)
-    print('This move gets you',pts,'points.')
+    if valide:
+        pts = score(word_table)
+        print('This move gets you',pts,'points.')
     
     return valide
 

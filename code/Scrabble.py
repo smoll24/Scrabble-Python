@@ -200,11 +200,22 @@ def print_score():
         print(line)
     print()
 
-def score(word):
+def score(word_table):
     total = 0
-    for elt in word:
-        num = jetons_pts[elt]
-        total = total + num 
+    for cord,let in word_table.items(): #score letters
+        num = jetons_pts[let]
+        if cord in plateau and plateau[cord][0] == 'l':
+            num *= plateau[cord][1]
+        total = total + num
+        
+    for cord in word_table.keys(): #word multipliers
+        if cord in plateau and plateau[cord][0] == 'm':
+            total *= plateau[cord][1]
+            
+    if len(word_table) >= 7: #using all 7 tiles bonus
+        print('BINGO!')
+        total += 50
+    
     return total
 
 def print_letters():
@@ -297,6 +308,10 @@ def test_word(word,cord,direct):
             else:
                 print(color_elt(elt), end='')
         print()
+    
+    #Calculate points
+    pts = score(word_table)
+    print('This move gets you',pts,'points.')
     
     return valide
 

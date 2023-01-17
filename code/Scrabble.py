@@ -271,7 +271,6 @@ def place_word(word, cord, direct):
 
 def has_letters(letters):
     '''Tests if the current player has the required letters
-        and removes them from the player's hand if they do
     Input: letters - iterable of strings
     Returns: bool'''
     global jetons_joueurs
@@ -285,11 +284,16 @@ def has_letters(letters):
         else:
             print('You do not have the letters for this move.')
             return False
-    
-    print('You used',*letters)
-    jetons_joueurs[current_player-1] = current_jetons
     return True
-            
+
+def remove_letters(letters):
+    '''Removes letters from the player's hand
+    Input: letters - iterable of strings'''
+    global jetons_joueurs
+    
+    for let in letters:
+        jetons_joueurs[current_player-1].remove(let)
+    print('You used',*letters)
 
 def test_word(word,cord,direct):
     word_table = get_word_table(word,cord,direct)
@@ -390,10 +394,11 @@ def test_game():
     
     #first word
     while True:
-        w,c,d = user_input(True)
-        if has_letters(w):
+        word,cord,direct = user_input(True)
+        if has_letters(word):
+            remove_letters(word)
             break
-    place_word(w,c,d)
+    place_word(word,cord,direct)
     
     while True:
         print_round()
@@ -407,6 +412,7 @@ def test_game():
                 break
         ans = input('Would you like to place the word (y,n): ')
         if ans == 'y':
+            remove_letters(word)
             place_word(word,cord,direct)
 
 

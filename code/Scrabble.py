@@ -114,7 +114,7 @@ def title_screen():
         
     #Gets number of players
     num_players = 0
-    while num_players < 1:
+    while num_players < 12:
         try:
             num_players = int(input('How many players? '))
         except:
@@ -221,20 +221,24 @@ def score(word_table):
 def print_letters():
     '''Prints out the player's letters and letter count in bag'''
     
-    #Distributes random letters for players
-    if len(bag) > 0:
-        if len(jetons_joueurs[current_player-1]) < 7:
-            for i in range(7-len(jetons_joueurs[current_player-1])):
-                #Picks a random jetons from the bag
-                jeton_rnd = random.choice(bag)
-                jetons_joueurs[current_player-1].append(jeton_rnd)
-                bag.remove(jeton_rnd)
     
     print('There are',len(bag),'letters left in the bag.\n')
 
     
     print("LETTRES DE PLAYER",current_player)
     print(jetons_joueurs[current_player-1])
+    
+def distrib_letters():
+    global bag, jetons_joueurs
+    #Distributes random letters for players
+    if len(bag) > 0:
+        print(current_player-1)
+        if len(jetons_joueurs[current_player-1]) < 7:
+            for i in range(7-len(jetons_joueurs[current_player-1])):
+                #Picks a random jetons from the bag
+                jeton_rnd = random.choice(bag)
+                jetons_joueurs[current_player-1].append(jeton_rnd)
+                bag.remove(jeton_rnd)
 
 def place_let(let, cord):
     '''Places a letter on the board
@@ -384,9 +388,9 @@ def print_round():
     global current_round, current_player, score_board
     current_round += 1
     current_player = (current_player % len(score_board[0]))+1
-    print("ROUND",current_round,"- PLAYER",current_player,"\n")
+    print("ROUND",current_round,"- PLAYER",current_player,"|",score_board[0][current_player],"\n")
 
-def test_game():
+def game():
     print_round()
     print_board()
     print_score()
@@ -398,7 +402,8 @@ def test_game():
         if has_letters(word):
             remove_letters(word)
             break
-    place_word(word,cord,direct)
+    place_word(word,cord,direct) #Calculate score
+    distrib_letters()
     
     while True:
         print_round()
@@ -414,6 +419,8 @@ def test_game():
         if ans == 'y':
             remove_letters(word)
             place_word(word,cord,direct)
+            
+        distrib_letters()
 
 
 def final_scores():
@@ -461,11 +468,7 @@ def final_scores():
 #PROGRAMME ------------------------------------------------------------------------------
     
 title_screen()
-
 initialise_board()
-
-print_round()
 initialise_letters()
-print_board()
-print_score()
-print_letters()
+
+print('To play, call game()')

@@ -272,7 +272,7 @@ def place_word(word, cord, direct):
 def has_letters(letters):
     '''Tests if the current player has the required letters
         and removes them from the player's hand if they do
-    Input: list of letters
+    Input: letters - iterable of strings
     Returns: bool'''
     global jetons_joueurs
     

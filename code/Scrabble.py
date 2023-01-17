@@ -114,7 +114,7 @@ def title_screen():
         
     #Gets number of players
     num_players = 0
-    while num_players < 12:
+    while num_players < 2:
         try:
             num_players = int(input('How many players? '))
         except:
@@ -200,19 +200,23 @@ def print_score():
         print(line)
     print()
 
-def score(word_table):
+def score(word_table,n_letters):
     total = 0
     for cord,let in word_table.items(): #score letters
         num = jetons_pts[let]
-        if cord in plateau and plateau[cord][0] == 'l':
-            num *= plateau[cord][1]
+        x,y = cord
+        if not board[y][x][0].isupper(): #if there is already a jeton don't use the multiplier.
+            if cord in plateau and plateau[cord][0] == 'l':
+                num *= plateau[cord][1]
         total = total + num
         
     for cord in word_table.keys(): #word multipliers
-        if cord in plateau and plateau[cord][0] == 'm':
-            total *= plateau[cord][1]
+        x,y = cord
+        if not board[y][x][0].isupper(): #if there is already a jeton don't use the multiplier.
+            if cord in plateau and plateau[cord][0] == 'm':
+                total *= plateau[cord][1]
             
-    if len(word_table) >= 7: #using all 7 tiles bonus
+    if n_letters >=7: #using all 7 tiles bonus
         print('BINGO!')
         total += 50
     
@@ -220,7 +224,6 @@ def score(word_table):
 
 def print_letters():
     '''Prints out the player's letters and letter count in bag'''
-    
     
     print('There are',len(bag),'letters left in the bag.\n')
 
@@ -232,7 +235,6 @@ def distrib_letters():
     global bag, jetons_joueurs
     #Distributes random letters for players
     if len(bag) > 0:
-        print(current_player-1)
         if len(jetons_joueurs[current_player-1]) < 7:
             for i in range(7-len(jetons_joueurs[current_player-1])):
                 #Picks a random jetons from the bag
@@ -244,8 +246,7 @@ def place_let(let, cord):
     '''Places a letter on the board
     Input: let - single chr string that isalpha
            cord - tuple countaining two ints (x,y)'''
-    x = cord[0]
-    y = cord[1]
+    x,y = cord
     board[y][x] = let.upper()+' '
 
 def get_word_table(word, cord, direct):
@@ -255,8 +256,7 @@ def get_word_table(word, cord, direct):
            direct - bool True is right and False is down
     Returns: word_table - dict of tuple:string '''
     word_table = {}
-    x = cord[0]
-    y = cord[1]
+    x,y = cord
     
     for i in range(len(word)):
         word_table[x,y] = word[i]
@@ -299,31 +299,7 @@ def remove_letters(letters):
         jetons_joueurs[current_player-1].remove(let)
     print('You used',*letters)
 
-def test_word(word,cord,direct):
-    word_table = get_word_table(word,cord,direct)
-    valide = True
-    
-    connected = False
-    
-    #test location and creat new_table containing all the required jetons
-    new_table = {}
-    for cord,let in word_table.items():
-        x = cord[0]
-        y = cord[1]
-        if board[y][x][0].isupper(): #if it is a jeton
-            if board[y][x][0] != let: #[0] cuz only the letter
-                valide = False
-            else:
-                connected = True
-        else:
-            new_table[(x,y)] = let
-    
-    #check that they have the jetons
-    check = has_letters(new_table.values())
-    if not check:
-        return False
-    
-    #preview board
+def preview_board(word_table):
     print('  ',end='')
     for i in range(15):
         print(' '+chr(i+97), end = '')
@@ -343,43 +319,82 @@ def test_word(word,cord,direct):
             else:
                 print(color_elt(elt), end='')
         print()
+
+def test_word(word,cord,direct):
+    word_table = get_word_table(word,cord,direct)
+    valide = True
+    off_board = False
+    connected = False
+    
+    #test location and create new_table containing all the required jetons
+    #also check that there is at least 1 connection
+    new_table = {}
+    for cord,let in word_table.items():
+        x,y = cord
+        
+        if x < 0 or x > 14: #Check that letter is on the board
+            off_board = True
+        elif y < 0 or y > 14:
+            off_board = True
+        else:
+            if board[y][x][0].isupper(): #if it is a jeton
+                if board[y][x][0] != let: #[0] cuz only the letter
+                    valide = False
+                else:
+                    connected = True
+            else:
+                new_table[(x,y)] = let
+    
+    #check that they have the jetons
+    check = has_letters(new_table.values())
+    if not check:
+        return False
+    
+    #preview board
+    preview_board(word_table)
     
     if not connected:
         valide = False
         print('The word is not connected to any other.')
     
+    if off_board:
+        valide = False
+        print("The word doesn't fit on the board.")
+    
     #Calculate points
     if valide:
-        pts = score(word_table)
+        pts = score(word_table,len(new_table.values()))
         print('This move gets you',pts,'points.')
+    
+        ans = input('Would you like to place the word (y,n): ')
+        if ans == 'y':
+            remove_letters(new_table.values())
     
     return valide
 
 
-def user_input(first_move = False):
+def user_input():
     print()
     while True:
         mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
         if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
-            word = mot.upper()
             break
     
-    if first_move:
-        cord = (7,7)
-    else:
-        while True:
-            range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
-            range_letters='abcdefghijklmno'
-            location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1): ")
-            if len(location)<=3: 
-                if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
-                    cord = (range_letters.find(location[0]),int(location[1:])-1)
-                    break
+    while True:
+        range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
+        range_letters='abcdefghijklmno'
+        location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1): ")
+        if len(location)<=3: 
+            if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
+                break
     while True:
         orientation = input("Saissisez une orientation right/down pour votre mot: ")
         if orientation == 'right' or orientation=='down':
-            direct = True if orientation == 'right' else False
             break
+        
+    word = mot.upper()
+    cord = (range_letters.find(location[0]),int(location[1:])-1)
+    direct = True if orientation == 'right' else False
     
     return word,cord,direct
 
@@ -388,38 +403,52 @@ def print_round():
     global current_round, current_player, score_board
     current_round += 1
     current_player = (current_player % len(score_board[0]))+1
-    print("ROUND",current_round,"- PLAYER",current_player,"|",score_board[0][current_player],"\n")
+    print("ROUND",current_round,"- PLAYER",current_player,"|",score_board[0][current_player-1],"\n")
 
-def game():
+def first_move():
     print_round()
     print_board()
     print_score()
     print_letters()
     
-    #first word
-    while True:
-        word,cord,direct = user_input(True)
-        if has_letters(word):
-            remove_letters(word)
-            break
-    place_word(word,cord,direct) #Calculate score
+    while True: #input loop
+        w,c,d = user_input()
+        
+        in_center = False
+        if has_letters(w):
+            word_table = get_word_table(w,c,d)
+            for cord in word_table.keys():
+                if cord == (7,7):
+                    in_center = True
+            preview_board(word_table)
+            
+            if not in_center:
+                print("Please place the first word in the center of the board (h8)")
+            else:
+                pts = score(word_table,len(w))
+                print('This move gets you',pts,'points.')
+            
+                ans = input('Would you like to place the word (y,n): ')
+                if ans == 'y':
+                    remove_letters(w)
+                    break
+    place_word(w,c,d)
     distrib_letters()
+
+def game():
+    first_move()
     
-    while True:
+    while True: #game loop
         print_round()
         print_board()
         print_score()
         print_letters() 
         
-        while True:
-            word,cord,direct = user_input()
-            if test_word(word,cord,direct):
+        while True: #input loop
+            w,c,d = user_input()
+            if test_word(w,c,d): #if the move is correct and they want to place it
                 break
-        ans = input('Would you like to place the word (y,n): ')
-        if ans == 'y':
-            remove_letters(word)
-            place_word(word,cord,direct)
-            
+        place_word(w,c,d)
         distrib_letters()
 
 

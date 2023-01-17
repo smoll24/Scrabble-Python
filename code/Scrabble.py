@@ -269,9 +269,33 @@ def place_word(word, cord, direct):
     for cord, let in word_table.items():
         place_let(let,cord)
 
+def has_letters(letters):
+    '''Tests if the current player has the required letters
+        and removes them from the player's hand if they do
+    Input: list of letters
+    Returns: bool'''
+    global jetons_joueurs
+    
+    #we don't want to effect the actual player's hand until we know they can play the move
+    current_jetons = jetons_joueurs[current_player-1].copy()
+    
+    for let in letters:
+        if let in current_jetons:
+            current_jetons.remove(let)
+        else:
+            print('You do not have the letters for this move.')
+            return False
+    
+    print('You used',*letters)
+    jetons_joueurs[current_player-1] = current_jetons
+    return True
+            
+
 def test_word(word,cord,direct):
     word_table = get_word_table(word,cord,direct)
     valide = True
+    
+    connected = False
     
     #test location and creat new_table containing all the required jetons
     new_table = {}
@@ -281,11 +305,13 @@ def test_word(word,cord,direct):
         if board[y][x][0].isupper(): #if it is a jeton
             if board[y][x][0] != let: #[0] cuz only the letter
                 valide = False
+            else:
+                connected = True
         else:
             new_table[(x,y)] = let
     
-    #check that they have the jetons --DOESN"T FULLY WORK YET IN PROGRESS
-    check = all(item in jetons_joueurs[current_player-1] for item in new_table.values())
+    #check that they have the jetons
+    check = has_letters(new_table.values())
     if not check:
         return False
     
@@ -310,6 +336,10 @@ def test_word(word,cord,direct):
                 print(color_elt(elt), end='')
         print()
     
+    if not connected:
+        valide = False
+        print('The word is not connected to any other.')
+    
     #Calculate points
     if valide:
         pts = score(word_table)
@@ -318,28 +348,31 @@ def test_word(word,cord,direct):
     return valide
 
 
-def user_input():
+def user_input(first_move = False):
     print()
     while True:
         mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
         if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
+            word = mot.upper()
             break
     
-    while True:
-        range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
-        range_letters='abcdefghijklmno'
-        location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1): ")
-        if len(location)<=3: 
-            if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
-                break
+    if first_move:
+        cord = (7,7)
+    else:
+        while True:
+            range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
+            range_letters='abcdefghijklmno'
+            location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1): ")
+            if len(location)<=3: 
+                if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
+                    cord = (range_letters.find(location[0]),int(location[1:])-1)
+                    break
     while True:
         orientation = input("Saissisez une orientation right/down pour votre mot: ")
         if orientation == 'right' or orientation=='down':
+            direct = True if orientation == 'right' else False
             break
     
-    word = mot.upper()
-    cord = (range_letters.find(location[0]),int(location[1:])-1)
-    direct = True if orientation == 'right' else False
     return word,cord,direct
 
 def print_round():
@@ -350,6 +383,18 @@ def print_round():
     print("ROUND",current_round,"- PLAYER",current_player,"\n")
 
 def test_game():
+    print_round()
+    print_board()
+    print_score()
+    print_letters()
+    
+    #first word
+    while True:
+        w,c,d = user_input(True)
+        if has_letters(w):
+            break
+    place_word(w,c,d)
+    
     while True:
         print_round()
         print_board()

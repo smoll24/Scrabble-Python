@@ -149,7 +149,7 @@ def color_elt(elt):
         new_elt = new_elt= couleur['bg_noir']+elt+couleur['clear']
     elif elt.islower(): #multipliers
         new_elt = couleur['txt_blanc']+couleurs_loc[elt]+elt+couleur['clear']
-    elif elt.isupper():
+    elif elt[0].isupper():
         new_elt = couleur['txt_noir']+couleur['bg_blanc']+elt+couleur['clear']
     return new_elt
         
@@ -239,7 +239,7 @@ def get_power(num):
     elif 2 <= num <= 3:
         c = chr(0x00b0 + num)
     elif num == 10:
-        c = chr(0x00b9)+chr(0x2070)
+        c = chr(0x02e3)
     else:
         c = chr(0x2070 + num)
     return c
@@ -355,6 +355,7 @@ def preview_board(word_table):
             if (x,y) in word_table:
                 let = word_table[(x,y)]
                 c = get_power(jetons_pts.get(let))
+                
                 if elt[0].isupper(): #if it is a jeton
                     if elt[0] == let:
                         print(couleur['txt_noir']+couleur['bg_vert']+let+c+couleur['clear'], end='')

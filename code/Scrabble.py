@@ -354,13 +354,14 @@ def preview_board(word_table):
         for x,elt in enumerate(row):
             if (x,y) in word_table:
                 let = word_table[(x,y)]
+                c = get_power(jetons_pts.get(let))
                 if elt[0].isupper(): #if it is a jeton
                     if elt[0] == let:
-                        print(couleur['txt_noir']+couleur['bg_vert']+let+' '+couleur['clear'], end='')
+                        print(couleur['txt_noir']+couleur['bg_vert']+let+c+couleur['clear'], end='')
                     else:
                         print(couleur['txt_blanc']+couleur['bg_rouge']+'XX'+couleur['clear'], end='')
                 else:
-                    print(couleur['txt_noir']+couleur['bg_jaune']+let+' '+couleur['clear'], end='')
+                    print(couleur['txt_noir']+couleur['bg_jaune']+let+c+couleur['clear'], end='')
             else:
                 print(color_elt(elt), end='')
         print()

@@ -273,7 +273,8 @@ def place_let(let, cord):
     Input: let - single chr string that isalpha
            cord - tuple countaining two ints (x,y)'''
     x,y = cord
-    board[y][x] = let.upper()+' '
+    c = get_power(jetons_pts.get(let))
+    board[y][x] = let.upper()+c
 
 def get_word_table(word, cord, direct):
     '''Creates a dict of all the letter's cordinates in a word

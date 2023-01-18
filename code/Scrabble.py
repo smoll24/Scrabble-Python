@@ -1,13 +1,13 @@
-#import enchant
 import random
-import importlib
 
-#Import enchant if available
-enchant = None
+# Read in the French Scrabble word list from a file
+word_list_path = 'french_scrabble_words2.txt'
+scrabble_words = None
 try:
-    enchant = importlib.import_module('enchant')
+    with open(word_list_path, 'r',encoding="utf-8") as f:
+        scrabble_words = f.read().splitlines()
 except:
-    print("Cannot find 'enchant' module. Wordchecker is not available.")
+    print("Cannot find",word_list_path,"Wordchecker is not available.\n")
 
 #DEFINITION DES VARIABLES ------------------------------------------------------------
 
@@ -91,25 +91,36 @@ def mot_valide(mot):
     '''Check if a word is valid for Scrabble
     Input: mot - string of letters
     Returns: bool'''
+    
+    mot = mot.lower()
+    
     if len(mot) < 2:
+        print('Word must be longer than 2 letters.')
         return False
     
-#     try:
-#         french_dict = enchant.Dict("fr")
-#         if not french_dict.check(mot):
-#             return False
-#     except:
-#         print('No spellcheck')
+    if scrabble_words and mot not in scrabble_words:
+        print('Word not a valid scrabble word.')
+        return False
         
     return True
-    
+
 def title_screen():
     '''Initialises the game and displays the title'''
-    global num_players, score_board
+    global num_players, score_board, scrabble_words
+    
     for line in title:
         print(line)
     print(('\n')*2)
-    begin = input((' ')*35+'Begin? ')
+    
+    #Ask if they want the wordchecker
+    if not scrabble_words:
+        print("Cannot find",word_list_path,"Wordchecker is not available.\n")
+    else:
+        ans = input('Would you like to use wordchecker (y/n): ')
+        if ans == 'n':
+            scrabble_words = None
+    
+    #begin = input((' ')*35+'Begin? ')
     print(('\n')*2)
         
     #Gets number of players
@@ -222,14 +233,29 @@ def score(word_table,n_letters):
     
     return total
 
+def get_power(num):
+    if num == 1:
+        c = chr(0x00b9)
+    elif 2 <= num <= 3:
+        c = chr(0x00b0 + num)
+    elif num == 10:
+        c = chr(0x00b9)+chr(0x2070)
+    else:
+        c = chr(0x2070 + num)
+    return c
+
 def print_letters():
     '''Prints out the player's letters and letter count in bag'''
     
     print('There are',len(bag),'letters left in the bag.\n')
 
+    print_letters = []
+    for let in jetons_joueurs[current_player-1]:
+        c = get_power(jetons_pts.get(let))
+        print_letters.append(let+c)
     
     print("LETTRES DE PLAYER",current_player)
-    print(jetons_joueurs[current_player-1])
+    print(*print_letters)
     
 def distrib_letters():
     global bag, jetons_joueurs
@@ -257,8 +283,26 @@ def get_word_table(word, cord, direct):
     Returns: word_table - dict of tuple:string '''
     word_table = {}
     x,y = cord
+    length = len(word)
     
-    for i in range(len(word)):
+    valide = True
+    
+    if direct == True: #horizontal
+        if board[y][x-1][0].isupper():
+            valide = False
+        elif board[y][x+length][0].isupper():
+            valide = False
+    else:
+        if board[y-1][x][0].isupper():
+            valide = False
+        elif board[y+length][x][0].isupper():
+            valide = False
+    
+    if not valide:
+        print('Please spell out the full word!')
+        return False
+    
+    for i in range(length):
         word_table[x,y] = word[i]
         
         if direct:
@@ -322,6 +366,9 @@ def preview_board(word_table):
 
 def test_word(word,cord,direct):
     word_table = get_word_table(word,cord,direct)
+    if not word_table:
+        return False
+    
     valide = True
     off_board = False
     connected = False
@@ -366,9 +413,11 @@ def test_word(word,cord,direct):
         pts = score(word_table,len(new_table.values()))
         print('This move gets you',pts,'points.')
     
-        ans = input('Would you like to place the word (y,n): ')
+        ans = input('Would you like to place the word (y/n): ')
         if ans == 'y':
-            remove_letters(new_table.values())
+          remove_letters(new_table.values())
+        else:
+            valide = False
     
     return valide
 
@@ -376,27 +425,32 @@ def test_word(word,cord,direct):
 def user_input():
     print()
     while True:
-        mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
-        if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
-            break
-    
-    while True:
-        range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
-        range_letters='abcdefghijklmno'
-        location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1): ")
-        if len(location)<=3: 
-            if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
-                break
-    while True:
-        orientation = input("Saissisez une orientation right/down pour votre mot: ")
-        if orientation == 'right' or orientation=='down':
-            break
-        
-    word = mot.upper()
-    cord = (range_letters.find(location[0]),int(location[1:])-1)
-    direct = True if orientation == 'right' else False
-    
-    return word,cord,direct
+        try:
+            while True:
+                mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
+                if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
+                    break
+            
+            while True:
+                range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
+                range_letters='abcdefghijklmno'
+                location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1): ")
+                if len(location)<=3: 
+                    if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
+                        break
+            while True:
+                orientation = input("Saissisez une orientation right/down pour votre mot: ")
+                if orientation == 'right' or orientation=='down':
+                    break
+        except:
+            print('Invalide input.')
+            continue
+        else:
+            word = mot.upper()
+            cord = (range_letters.find(location[0]),int(location[1:])-1)
+            direct = True if orientation == 'right' else False
+            
+            return word,cord,direct
 
 def print_round():
     print()
@@ -417,6 +471,9 @@ def first_move():
         in_center = False
         if has_letters(w):
             word_table = get_word_table(w,c,d)
+            if not word_table:
+                continue
+            
             for cord in word_table.keys():
                 if cord == (7,7):
                     in_center = True
@@ -428,11 +485,11 @@ def first_move():
                 pts = score(word_table,len(w))
                 print('This move gets you',pts,'points.')
             
-                ans = input('Would you like to place the word (y,n): ')
+                ans = input('Would you like to place the word (y/n): ')
                 if ans == 'y':
                     remove_letters(w)
+                    place_word(w,c,d)
                     break
-    place_word(w,c,d)
     distrib_letters()
 
 def game():
@@ -447,8 +504,8 @@ def game():
         while True: #input loop
             w,c,d = user_input()
             if test_word(w,c,d): #if the move is correct and they want to place it
+                place_word(w,c,d)
                 break
-        place_word(w,c,d)
         distrib_letters()
 
 

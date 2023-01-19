@@ -514,7 +514,7 @@ def test_word(word,cord,direct):
     #Calculate points
     if valide:
         pts = score(word_table,len(new_table.values()))
-        print('Ce placement ous rapporte',pts,'points.')
+        print('Ce mot vous rapportera',pts,'points.')
     
         ans = input('Voulez-vous placer ce mot ? (y/n) : ')
         if ans == 'y':
@@ -623,7 +623,7 @@ def first_move():
             continue
         
         pts = score(word_table,len(w))
-        print('Ce placement ous rapporte',pts,'points.')
+        print('Ce mot vous rapportera',pts,'points.')
     
         ans = input('Voulez-vous placer ce mot ? (y/n) : ')
         if ans == 'y':

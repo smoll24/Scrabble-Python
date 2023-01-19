@@ -73,10 +73,9 @@ end_title = [
  '| |  __  __ _ _ __ ___   ___  | |  | |_   _____ _ __  | |',
  "| | |_ |/ _` | '_ ` _ \ / _ \ | |  | \ \ / / _ \ '__| | |",
  '| |__| | (_| | | | | | |  __/ | |__| |\ V /  __/ |    |_|',
- ' \_____|\__,_|_| |_| |_|\___|  \____/  \_/ \___|_|    (_)'
-                                                                                   ]
+ ' \_____|\__,_|_| |_| |_|\___|  \____/  \_/ \___|_|    (_)']
 
-#creat bag which we will pull from to get letters
+#create bag which we will pull from to get letters
 bag = []
 for let, nb in jetons_nbre.items():
     for i in range(nb):
@@ -137,11 +136,11 @@ def title_screen():
     
     #If BOTH UNAVAILABLE
     if not scrabble_words_fr and not scrabble_words_en:
-        print("Impossible de trouver "+fr_word_list_path+" ou "+en_word_list_path+".\nLe vérificateur de mots français n'est pas disponible.\n")
+        print("Impossible de trouver '"+fr_word_list_path+"' ou '"+en_word_list_path+"'.\nLe vérificateur de mots n'est pas disponible.\n")
     else:
         #IF FR NOT AVAILABLE
         if not scrabble_words_fr:
-            print("Impossible de trouver "+fr_word_list_path+".\nLe vérificateur de mots français n'est pas disponible.\n")
+            print("Impossible de trouver '"+fr_word_list_path+"'.\nLe vérificateur de mots français n'est pas disponible.\n")
             ans = input('Désirez-vous utiliser le vérificateur de mots anglais ? (y/n) ')
             if ans == 'n':
                 scrabble_words = None
@@ -150,7 +149,7 @@ def title_screen():
                 
         #IF EN NOT AVAILABLE
         if not scrabble_words_en:
-            print("Impossible de trouver "+en_word_list_path+".\nLe vérificateur de mots anglais n'est pas disponible.\n")
+            print("Impossible de trouver '"+en_word_list_path+"'.\nLe vérificateur de mots anglais n'est pas disponible.\n")
             ans = input('Désirez-vous utiliser le vérificateur de mots français ? (y/n) ')
             if ans == 'n':
                 scrabble_words = None
@@ -168,12 +167,13 @@ def title_screen():
                     scrabble_words = scrabble_words_fr
         
     #Gets number of players
+    print()
     num_players = 0
-    while num_players < 2:
+    while num_players < 2 or num_players > 10:
         try:
-            num_players = int(input('\nCombien de joueurs ? '))
+            num_players = int(input('Combien de joueurs (2 à 10)? '))
         except:
-            print("Ce n'est pas un nombre de joueurs valable.")
+            print("Ce n'est pas un nombre de joueurs valable.\n")
             
     #Initializes the score board with the correct number of rows and columns
     score_board = [['0' for i in range(num_players)] for i in range(2)]
@@ -498,32 +498,31 @@ def test_word(word,cord,direct):
 def user_input():
     print()
     while True:
-        try:
-            while True:
-                mot = input("Saissisez un mot que vous souhaitez placer sur le plateau : ")
-                if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
+        mot = input("Saissisez un mot que vous souhaitez placer sur le plateau : ")
+        if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
+            break
+    
+    while True:
+        range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
+        range_letters='abcdefghijklmno'
+        location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1) : ")
+        if len(location)<=3:
+            try:
+                if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
                     break
-            
-            while True:
-                range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
-                range_letters='abcdefghijklmno'
-                location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1) : ")
-                if len(location)<=3: 
-                    if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
-                        break
-            while True:
-                orientation = input("Saissisez une orientation horizontale ou verticale pour votre mot (h/v) : ")
-                if orientation[0] == 'v' or orientation[0]=='h':
-                    break
-        except:
-            print('Entrée invalide.')
-            continue
-        else:
-            word = mot.upper()
-            cord = (range_letters.find(location[0]),int(location[1:])-1)
-            direct = True if orientation[0] == 'h' else False
-            
-            return word,cord,direct
+            except:
+                pass
+        
+    while True:
+        orientation = input("Saissisez une orientation horizontale ou verticale pour votre mot (h/v) : ")
+        if orientation[0] == 'v' or orientation[0]=='h':
+            break
+
+    word = mot.upper()
+    cord = (range_letters.find(location[0]),int(location[1:])-1)
+    direct = True if orientation[0] == 'h' else False
+        
+    return word,cord,direct
 
 def print_round():
     print()
@@ -563,7 +562,7 @@ def print_actions():
             assert act in range(1,6)
             return act
         except:
-           print("no") 
+           print("Invalable.") 
     
 
 def first_move():
@@ -610,30 +609,22 @@ def game():
         print_letters()
         act = print_actions()
         
-        #Play word
-        if act == 1:
-            pass
-        
-        #Re-pull
-        if act == 2:
+        if act == 2: #Re-pull
             replace_letters()
             continue
             
-        #Skip
-        if act == 3:
+        elif act == 3: #Skip
             continue
             
-        #Forfeit
-        if act == 4:
+        elif act == 4: #Forfeit
             final_scores()
             break
             
-        #End game
-        if act == 5:
+        elif act == 5: #End game
             final_scores()
-            break
+            break 
         
-        
+        #Play word
         while True: #input loop
             w,c,d = user_input()
             if test_word(w,c,d): #if the move is correct and they want to place it
@@ -697,4 +688,5 @@ title_screen()
 initialise_board()
 initialise_letters()
 
-print('Pour jouer, appelez game()')
+#print('Pour jouer, appelez game()')
+game()

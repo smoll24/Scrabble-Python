@@ -1,13 +1,22 @@
 import random
 
 # Read in the French Scrabble word list from a file
-word_list_path = 'french_scrabble_words2.txt'
+fr_word_list_path = 'french_scrabble_words2.txt'
+en_word_list_path = 'english_scrabble_words.txt'
+scrabble_words_fr = None
+scrabble_words_en = None
 scrabble_words = None
 try:
-    with open(word_list_path, 'r',encoding="utf-8") as f:
-        scrabble_words = f.read().splitlines()
+    with open(fr_word_list_path, 'r',encoding="utf-8") as f:
+        scrabble_words_fr = f.read().splitlines()
 except:
-    print("Cannot find",word_list_path,"Wordchecker is not available.\n")
+    pass
+    
+try:
+    with open(en_word_list_path, 'r',encoding="utf-8") as f:
+        scrabble_words_en = f.read().splitlines()
+except:
+    pass
 
 #DEFINITION DES VARIABLES ------------------------------------------------------------
 
@@ -112,16 +121,42 @@ def title_screen():
         print(line)
     print(('\n')*2)
     
-    #Ask if they want the wordchecker
-    if not scrabble_words:
-        print("Cannot find",word_list_path,"Wordchecker is not available.\n")
-    else:
-        ans = input('Would you like to use wordchecker (y/n): ')
-        if ans == 'n':
-            scrabble_words = None
-    
-    #begin = input((' ')*35+'Begin? ')
+    begin = input((' ')*35+'Begin? ')
     print(('\n')*2)
+    
+    #Ask if they want the wordchecker
+    
+    #If BOTH UNAVAILABLE
+    if not scrabble_words_fr and not scrabble_words_en:
+        print("Cannot find",fr_word_list_path,"or",en_word_list_path,"Wordchecker is not available.\n")
+    else:
+        #IF FR NOT AVAILABLE
+        if not scrabble_words_fr:
+            print("Cannot find",fr_word_list_path,"French wordchecker is not available.\n")
+            ans = input('Would you like to use English wordchecker (y/n): ')
+            if ans == 'n':
+                scrabble_words = None
+            else:
+                scrabble_words = scrabble_words_en
+                
+        #IF EN NOT AVAILABLE
+        if not scrabble_words_en:
+            print("Cannot find",en_word_list_path,"English wordchecker is not available.\n")
+            ans = input('Would you like to use French wordchecker (y/n): ')
+            if ans == 'n':
+                scrabble_words = None
+            else:
+                scrabble_words = scrabble_words_fr
+                    
+        #IF BOTH AVAILABLE
+        if scrabble_words_fr and scrabble_words_en:
+                ans = input('Would you like to use French, English, or no wordchecker (fr/en/n): ')
+                if ans == 'n':
+                    scrabble_words = None
+                elif ans == 'en':
+                    scrabble_words = scrabble_words_en
+                elif ans == 'fr':
+                    scrabble_words = scrabble_words_fr
         
     #Gets number of players
     num_players = 0

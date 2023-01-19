@@ -16,4 +16,4 @@ Each round, players will draw seven letters from the Scrabble tile bag and use t
 ### Acknowledgments
 - This project was inspired by the popular board game Scrabble.
 - The French word list used in this game was sourced from https://chrplr.github.io/openlexicon/datasets-info/Liste-de-mots-francais-Gutenberg/liste.de.mots.francais.frgut.txt 
-- The English word list was sourced from from https://www.mit.edu/~ecprice/wordlist.10000
+- The English word list was sourced from https://www.mit.edu/~ecprice/wordlist.10000

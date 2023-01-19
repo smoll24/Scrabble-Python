@@ -289,14 +289,14 @@ def get_word_table(word, cord, direct):
     valide = True
     
     if direct == True: #horizontal
-        if board[y][x-1][0].isupper():
+        if x !=0 and board[y][x-1][0].isupper():
             valide = False
-        elif board[y][x+length][0].isupper():
+        elif not x+length > 14 and board[y][x+length][0].isupper():
             valide = False
     else:
-        if board[y-1][x][0].isupper():
+        if y !=0 and board[y-1][x][0].isupper():
             valide = False
-        elif board[y+length][x][0].isupper():
+        elif not y+length > 14 and board[y+length][x][0].isupper():
             valide = False
     
     if not valide:

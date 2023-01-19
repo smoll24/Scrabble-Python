@@ -137,7 +137,7 @@ def title_screen():
     
     #If BOTH UNAVAILABLE
     if not scrabble_words_fr and not scrabble_words_en:
-        print("Impossible de trouver "+fr_word_list_path+" ou "+fr_word_list_path+".\nLe vérificateur de mots français n'est pas disponible.\n")
+        print("Impossible de trouver "+fr_word_list_path+" ou "+en_word_list_path+".\nLe vérificateur de mots français n'est pas disponible.\n")
     else:
         #IF FR NOT AVAILABLE
         if not scrabble_words_fr:

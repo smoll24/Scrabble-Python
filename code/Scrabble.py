@@ -121,19 +121,19 @@ def title_screen():
         print(line)
     print(('\n')*2)
     
-    begin = input((' ')*35+'Begin? ')
+    begin = input((' ')*35+'Commencer ? ')
     print(('\n')*2)
     
     #Ask if they want the wordchecker
     
     #If BOTH UNAVAILABLE
     if not scrabble_words_fr and not scrabble_words_en:
-        print("Cannot find",fr_word_list_path,"or",en_word_list_path,"Wordchecker is not available.\n")
+        print("Impossible de trouver "+fr_word_list_path+" ou "+fr_word_list_path+".\nLe vérificateur de mots français n'est pas disponible.\n")
     else:
         #IF FR NOT AVAILABLE
         if not scrabble_words_fr:
-            print("Cannot find",fr_word_list_path,"French wordchecker is not available.\n")
-            ans = input('Would you like to use English wordchecker (y/n): ')
+            print("Impossible de trouver "+fr_word_list_path+".\nLe vérificateur de mots français n'est pas disponible.\n")
+            ans = input('Désirez-vous utiliser le vérificateur de mots anglais ? (y/n) ')
             if ans == 'n':
                 scrabble_words = None
             else:
@@ -141,8 +141,8 @@ def title_screen():
                 
         #IF EN NOT AVAILABLE
         if not scrabble_words_en:
-            print("Cannot find",en_word_list_path,"English wordchecker is not available.\n")
-            ans = input('Would you like to use French wordchecker (y/n): ')
+            print("Impossible de trouver "+en_word_list_path+".\nLe vérificateur de mots anglais n'est pas disponible.\n")
+            ans = input('Désirez-vous utiliser le vérificateur de mots français ? (y/n) ')
             if ans == 'n':
                 scrabble_words = None
             else:
@@ -150,7 +150,7 @@ def title_screen():
                     
         #IF BOTH AVAILABLE
         if scrabble_words_fr and scrabble_words_en:
-                ans = input('Would you like to use French, English, or no wordchecker (fr/en/n): ')
+                ans = input('Désirez-vous utiliser le vérificateur de mots français, anglais ou nul ? (fr/en/n) ')
                 if ans == 'n':
                     scrabble_words = None
                 elif ans == 'en':
@@ -162,16 +162,16 @@ def title_screen():
     num_players = 0
     while num_players < 2:
         try:
-            num_players = int(input('How many players? '))
+            num_players = int(input('\nCombien de joueurs ? '))
         except:
-            print("I'm sorry, that is not a valid number of players.")
+            print("Ce n'est pas un nombre de joueurs valable.")
             
     #Initializes the score board with the correct number of rows and columns
     score_board = [['0' for i in range(num_players)] for i in range(2)]
     
     #Adds player names to the first row
     for i in range(num_players):
-        score_board[0][i] = input('Name of Player '+str(i+1)+'? ')
+        score_board[0][i] = input('Nom du joueur '+str(i+1)+'? ')
     print(('\n')*2)
 
 def color_elt(elt):
@@ -282,14 +282,14 @@ def get_power(num):
 def print_letters():
     '''Prints out the player's letters and letter count in bag'''
     
-    print('There are',len(bag),'letters left in the bag.\n')
+    print('Il reste',len(bag),'lettres dans le sac.\n')
 
     print_letters = []
     for let in jetons_joueurs[current_player-1]:
         c = get_power(jetons_pts.get(let))
         print_letters.append(let+c)
     
-    print("LETTRES DE PLAYER",current_player)
+    print("LETTRES DU JOUEUR",current_player)
     print(*print_letters)
     
 def distrib_letters():
@@ -335,7 +335,7 @@ def get_word_table(word, cord, direct):
             valide = False
     
     if not valide:
-        print('Please spell out the full word!')
+        print('Épelez le mot en entier !')
         return False
     
     for i in range(length):
@@ -366,7 +366,7 @@ def has_letters(letters):
         if let in current_jetons:
             current_jetons.remove(let)
         else:
-            print('You do not have the letters for this move.')
+            print("Vous n'avez pas les lettres pour ce mot.")
             return False
     return True
 
@@ -377,12 +377,12 @@ def remove_letters(letters):
     
     for let in letters:
         jetons_joueurs[current_player-1].remove(let)
-    print('You used',*letters)
+    print('Vous avez utilisé',*letters)
 
 def replace_letters():
     '''Removes player's letters and adds them back agains'''
     print()
-    ans =input( "Replace letters? (y/n) ")
+    ans =input( "Remplacer vos lettres ? (y/n) ")
     
     if ans == 'y':
         for i in range(7):
@@ -466,18 +466,18 @@ def test_word(word,cord,direct):
     
     if not connected:
         valide = False
-        print('The word is not connected to any other.')
+        print("Le mot n'est pas relié à un autre.")
     
     if off_board:
         valide = False
-        print("The word doesn't fit on the board.")
+        print("Le mot ne tient pas sur le plateau.")
     
     #Calculate points
     if valide:
         pts = score(word_table,len(new_table.values()))
-        print('This move gets you',pts,'points.')
+        print('Ce mouvement vous donne',pts,'points.')
     
-        ans = input('Would you like to place the word (y/n): ')
+        ans = input('Voulez-vous placer ce mot ? (y/n): ')
         if ans == 'y':
           remove_letters(new_table.values())
           add_score(pts)
@@ -492,7 +492,7 @@ def user_input():
     while True:
         try:
             while True:
-                mot = input("Saissisez un mot que vous aimerez placer sur le plateau: ")
+                mot = input("Saissisez un mot que vous souhaitez placer sur le plateau: ")
                 if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
                     break
             
@@ -504,16 +504,16 @@ def user_input():
                     if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
                         break
             while True:
-                orientation = input("Saissisez une orientation right/down pour votre mot: ")
-                if orientation == 'right' or orientation=='down':
+                orientation = input("Saissisez une orientation horizontale ou verticale pour votre mot (h/v): ")
+                if orientation[0] == 'v' or orientation[0]=='h':
                     break
         except:
-            print('Invalide input.')
+            print('Entrée invalide.')
             continue
         else:
             word = mot.upper()
             cord = (range_letters.find(location[0]),int(location[1:])-1)
-            direct = True if orientation == 'right' else False
+            direct = True if orientation[0] == 'h' else False
             
             return word,cord,direct
 
@@ -522,7 +522,7 @@ def print_round():
     global current_round, current_player, score_board
     current_round += 1
     current_player = (current_player % len(score_board[0]))+1
-    print("ROUND",current_round,"- PLAYER",current_player,"|",score_board[0][current_player-1],"\n")
+    print("TOUR",current_round,"- JOUEUR",current_player,"|",score_board[0][current_player-1],"\n")
 
 def first_move():
     print_round()
@@ -546,12 +546,12 @@ def first_move():
             preview_board(word_table)
             
             if not in_center:
-                print("Please place the first word in the center of the board (h8)")
+                print("Veuillez placer le premier mot au centre du plateau (h8).")
             else:
                 pts = score(word_table,len(w))
-                print('This move gets you',pts,'points.')
+                print('Ce mouvement vous donne',pts,'points.')
             
-                ans = input('Would you like to place the word (y/n): ')
+                ans = input('Voulez-vous placer ce mot ? (y/n): ')
                 if ans == 'y':
                     remove_letters(w)
                     add_score(pts)
@@ -596,8 +596,8 @@ def final_scores():
     #Puts the new scores back into the board and prints them
     for i in range(len(score_board[0])):
         score_board[1][i] = str(scores[i])
-    print('GAME OVER!')
-    print('The final scores are:')
+    print('GAME OVER !')
+    print('Les scores ultimes sont :')
     print_score()
     
     #Finds the best score and if there is a tie
@@ -611,13 +611,13 @@ def final_scores():
             if int(score) == best_score:
                 winners.append(score_board[0][i])
                 
-        winners[-1] = 'and '+str(winners[-1])
-        print('The game is tied. The winners are '+(", ".join(str(x) for x in winners))+'!')
+        winners[-1] = 'et '+str(winners[-1])
+        print('Le jeu est à égalité. Les gagnants sont '+(", ".join(str(x) for x in winners))+' !')
     
     #If there is no tie, print the winner
     else:
         winner = score_board[0][scores.index(best_score)]
-        print('The winner is '+winner+'!')
+        print('Le gagnant est '+winner+' !')
 
 #PROGRAMME ------------------------------------------------------------------------------
     
@@ -625,4 +625,4 @@ title_screen()
 initialise_board()
 initialise_letters()
 
-print('To play, call game()')
+print('Pour jouer, appelez game()')

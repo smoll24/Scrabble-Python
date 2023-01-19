@@ -289,14 +289,14 @@ def get_word_table(word, cord, direct):
     valide = True
     
     if direct == True: #horizontal
-        if board[y][x-1][0].isupper():
+        if x !=0 and board[y][x-1][0].isupper():
             valide = False
-        elif board[y][x+length][0].isupper():
+        elif not x+length > 14 and board[y][x+length][0].isupper():
             valide = False
     else:
-        if board[y-1][x][0].isupper():
+        if y !=0 and board[y-1][x][0].isupper():
             valide = False
-        elif board[y+length][x][0].isupper():
+        elif not y+length > 14 and board[y+length][x][0].isupper():
             valide = False
     
     if not valide:
@@ -344,7 +344,6 @@ def remove_letters(letters):
         jetons_joueurs[current_player-1].remove(let)
     print('You used',*letters)
 
-	
 def replace_letters():
     '''Removes player's letters and adds them back agains'''
     print()
@@ -386,6 +385,13 @@ def preview_board(word_table):
             else:
                 print(color_elt(elt), end='')
         print()
+
+def add_score(pts):
+    global score_board
+    #Add score to scoreboard
+    score = int(score_board[1][current_player-1])
+    score += pts
+    score_board[1][current_player-1] = str(score)
 
 def test_word(word,cord,direct):
     word_table = get_word_table(word,cord,direct)
@@ -438,11 +444,8 @@ def test_word(word,cord,direct):
     
         ans = input('Would you like to place the word (y/n): ')
         if ans == 'y':
-            remove_letters(new_table.values())
-            #Add score to scoreboard
-            score_board[1][current_player-1] = str(score_board[1][current_player-1])
-            score_board[1][current_player-1] += pts
-            score_board[1][current_player-1] = str(score_board[1][current_player-1])
+          remove_letters(new_table.values())
+          add_score(pts)
         else:
             valide = False
     
@@ -516,6 +519,7 @@ def first_move():
                 ans = input('Would you like to place the word (y/n): ')
                 if ans == 'y':
                     remove_letters(w)
+                    add_score(pts)
                     place_word(w,c,d)
                     break
     distrib_letters()
@@ -587,4 +591,3 @@ initialise_board()
 initialise_letters()
 
 print('To play, call game()')
-

@@ -289,14 +289,14 @@ def get_word_table(word, cord, direct):
     valide = True
     
     if direct == True: #horizontal
-        if x !=0 and board[y][x-1][0].isupper():
+        if board[y][x-1][0].isupper():
             valide = False
-        elif not x+length > 14 and board[y][x+length][0].isupper():
+        elif board[y][x+length][0].isupper():
             valide = False
     else:
-        if y !=0 and board[y-1][x][0].isupper():
+        if board[y-1][x][0].isupper():
             valide = False
-        elif not y+length > 14 and board[y+length][x][0].isupper():
+        elif board[y+length][x][0].isupper():
             valide = False
     
     if not valide:
@@ -343,6 +343,26 @@ def remove_letters(letters):
     for let in letters:
         jetons_joueurs[current_player-1].remove(let)
     print('You used',*letters)
+
+	
+def replace_letters():
+    '''Removes player's letters and adds them back agains'''
+    print()
+    ans =input( "Replace letters? (y/n) ")
+    
+    if ans == 'y':
+        for i in range(7):
+            bag.append(jetons_joueurs[current_player-1][i])
+            
+        jetons_joueurs[current_player-1] = []
+        
+        for i in range(7):
+            #Picks a random jetons from the bag
+            jeton_rnd = random.choice(bag)
+            jetons_joueurs[current_player-1].append(jeton_rnd)
+            bag.remove(jeton_rnd)
+            
+        print_letters()
 
 def preview_board(word_table):
     print('  ',end='')
@@ -418,7 +438,11 @@ def test_word(word,cord,direct):
     
         ans = input('Would you like to place the word (y/n): ')
         if ans == 'y':
-          remove_letters(new_table.values())
+            remove_letters(new_table.values())
+            #Add score to scoreboard
+            score_board[1][current_player-1] = str(score_board[1][current_player-1])
+            score_board[1][current_player-1] += pts
+            score_board[1][current_player-1] = str(score_board[1][current_player-1])
         else:
             valide = False
     
@@ -467,6 +491,7 @@ def first_move():
     print_board()
     print_score()
     print_letters()
+    replace_letters()
     
     while True: #input loop
         w,c,d = user_input()
@@ -502,7 +527,8 @@ def game():
         print_round()
         print_board()
         print_score()
-        print_letters() 
+        print_letters()
+        replace_letters()
         
         while True: #input loop
             w,c,d = user_input()
@@ -561,3 +587,4 @@ initialise_board()
 initialise_letters()
 
 print('To play, call game()')
+

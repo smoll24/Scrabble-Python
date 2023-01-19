@@ -365,8 +365,8 @@ def place_word(word, cord, direct):
 def has_letters(letters):
     '''Tests if the current player has the required letters
     Input: letters - iterable of strings
-    Returns: bool'''
-    global jetons_joueurs
+    Returns: bool
+             let - first bad letter found'''
     
     #we don't want to effect the actual player's hand until we know they can play the move
     current_jetons = jetons_joueurs[current_player-1].copy()
@@ -375,21 +375,52 @@ def has_letters(letters):
         if let in current_jetons:
             current_jetons.remove(let)
         else:
-            print("Vous n'avez pas les lettres pour ce mot.")
-            return False
-    return True
+            return False, let
+        
+    return True, None
+
+def test_letters(letters):
+    global jetons_joueurs
+    
+    valide, let = has_letters(letters)
+    
+    for i in range(jetons_joueurs[current_player-1].count('joker')):
+        if valide:
+            break
+        
+        ans = input('Voulez-vous utiliser un joker pour la lettre '+let+' (y/n) ? ')
+        if ans == 'y':
+            #I append the extra letters so that later we can decide to remove the extra letters or the jokers
+            jetons_joueurs[current_player-1].append(let)
+        else:
+            break
+        
+        valide, let = has_letters(letters)
+    
+    if not valide:
+        print("Vous n'avez pas les lettres pour ce mot.")
+        #delete extra letters
+        jetons_joueurs[current_player-1] = jetons_joueurs[current_player-1][:7]
+            
+    return valide
 
 def remove_letters(letters):
     '''Removes letters from the player's hand
     Input: letters - iterable of strings'''
     global jetons_joueurs
     
+    #remove extra jokers
+    over = len(jetons_joueurs[current_player-1]) - 7
+    if over > 0:
+        for i in range(over):
+            jetons_joueurs[current_player-1].remove('joker')
+    
     for let in letters:
         jetons_joueurs[current_player-1].remove(let)
     print('Vous avez utilisé',*letters)
 
 def replace_letters():
-    '''Removes player's letters and adds them back agains'''
+    '''Putts player's letters in the bag and draws 7 new ones'''
     for i in range(7):
         bag.append(jetons_joueurs[current_player-1][i])
         
@@ -463,9 +494,9 @@ def test_word(word,cord,direct):
                 new_table[(x,y)] = let
     
     #check that they have the jetons
-    check = has_letters(new_table.values())
+    check = test_letters(new_table.values())
     if not check:
-        return False
+            return False
     
     #preview board
     preview_board(word_table)
@@ -483,7 +514,7 @@ def test_word(word,cord,direct):
     #Calculate points
     if valide:
         pts = score(word_table,len(new_table.values()))
-        print('Ce mouvement vous donne',pts,'points.')
+        print('Ce placement ous rapporte',pts,'points.')
     
         ans = input('Voulez-vous placer ce mot ? (y/n) : ')
         if ans == 'y':
@@ -515,7 +546,7 @@ def user_input():
         
     while True:
         orientation = input("Saissisez une orientation horizontale ou verticale pour votre mot (h/v) : ")
-        if orientation[0] == 'v' or orientation[0]=='h':
+        if len(orientation) > 0 and (orientation[0] == 'v' or orientation[0]=='h'):
             break
 
     word = mot.upper()
@@ -525,7 +556,7 @@ def user_input():
     return word,cord,direct
 
 def print_round():
-    print()
+    print('\n')
     global current_round, current_player, score_board
     current_round += 1
     current_player = (current_player % len(score_board[0]))+1
@@ -562,7 +593,7 @@ def print_actions():
             assert act in range(1,6)
             return act
         except:
-           print("Invalable.") 
+           print("Action inconnue.") 
     
 
 def first_move():
@@ -575,28 +606,31 @@ def first_move():
         w,c,d = user_input()
         
         in_center = False
-        if has_letters(w):
-            word_table = get_word_table(w,c,d)
-            if not word_table:
-                continue
-            
-            for cord in word_table.keys():
-                if cord == (7,7):
-                    in_center = True
-            preview_board(word_table)
-            
-            if not in_center:
-                print("Veuillez placer le premier mot au centre du plateau (h8).")
-            else:
-                pts = score(word_table,len(w))
-                print('Ce mouvement vous donne',pts,'points.')
-            
-                ans = input('Voulez-vous placer ce mot ? (y/n) : ')
-                if ans == 'y':
-                    remove_letters(w)
-                    add_score(pts)
-                    place_word(w,c,d)
-                    break
+        if not test_letters(w):
+            continue
+        
+        word_table = get_word_table(w,c,d)
+        if not word_table:
+            continue
+        
+        for cord in word_table.keys():
+            if cord == (7,7):
+                in_center = True
+        preview_board(word_table)
+        
+        if not in_center:
+            print("Veuillez placer le premier mot au centre du plateau (h8).")
+            continue
+        
+        pts = score(word_table,len(w))
+        print('Ce placement ous rapporte',pts,'points.')
+    
+        ans = input('Voulez-vous placer ce mot ? (y/n) : ')
+        if ans == 'y':
+            remove_letters(w)
+            add_score(pts)
+            place_word(w,c,d)
+            break
     distrib_letters()
 
 def game():

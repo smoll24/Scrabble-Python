@@ -67,6 +67,15 @@ title = [' .d8888b.   .d8888b.  8888888b.         d8888 888888b.   888888b.   88
          'Y88b  d88P Y88b  d88P 888  T88b   d8888888888 888   d88P 888   d88P 888      888       ',
          ' "Y8888P"   "Y8888P"  888   T88b d88P     888 8888888P"  8888888P"  88888888 8888888888']
 
+end_title = [
+ '  _____                         ____                   _ ',
+ ' / ____|                       / __ \                 | |',
+ '| |  __  __ _ _ __ ___   ___  | |  | |_   _____ _ __  | |',
+ "| | |_ |/ _` | '_ ` _ \ / _ \ | |  | \ \ / / _ \ '__| | |",
+ '| |__| | (_| | | | | | |  __/ | |__| |\ V /  __/ |    |_|',
+ ' \_____|\__,_|_| |_| |_|\___|  \____/  \_/ \___|_|    (_)'
+                                                                                   ]
+
 #creat bag which we will pull from to get letters
 bag = []
 for let, nb in jetons_nbre.items():
@@ -381,22 +390,18 @@ def remove_letters(letters):
 
 def replace_letters():
     '''Removes player's letters and adds them back agains'''
-    print()
-    ans =input( "Remplacer vos lettres ? (y/n) ")
-    
-    if ans == 'y':
-        for i in range(7):
-            bag.append(jetons_joueurs[current_player-1][i])
-            
-        jetons_joueurs[current_player-1] = []
+    for i in range(7):
+        bag.append(jetons_joueurs[current_player-1][i])
         
-        for i in range(7):
-            #Picks a random jetons from the bag
-            jeton_rnd = random.choice(bag)
-            jetons_joueurs[current_player-1].append(jeton_rnd)
-            bag.remove(jeton_rnd)
-            
-        print_letters()
+    jetons_joueurs[current_player-1] = []
+    
+    for i in range(7):
+        #Picks a random jetons from the bag
+        jeton_rnd = random.choice(bag)
+        jetons_joueurs[current_player-1].append(jeton_rnd)
+        bag.remove(jeton_rnd)
+        
+    print_letters()
 
 def preview_board(word_table):
     print('  ',end='')
@@ -524,12 +529,45 @@ def print_round():
     current_player = (current_player % len(score_board[0]))+1
     print("TOUR",current_round,"- JOUEUR",current_player,"|",score_board[0][current_player-1],"\n")
 
+def print_actions():
+    actions = ["1. Jouer un mot",
+               "2. Tirer à nouveau les lettres",
+               "3. Sauter le tour",
+               "4. Abandonner",
+               "5. Terminer le jeu"]
+    
+    print()
+    # Get the maximum length of the row
+    max_length = max([len(i) for i in actions])
+
+    # Create a top and bottom border
+    border = "+" + "-"*(max_length+2) + "+"
+    print(border)
+
+    # Print each item
+    for el in actions:
+        print("| " + el.ljust(max_length) + " |")
+
+    # Print the bottom border
+    print(border)
+    
+    print()
+    
+    #Input loop
+    while True:
+        try:
+            act = int(input("Choisissez une action à faire (1-5) : "))
+            assert act in range(1,6)
+            return act
+        except:
+           print("no") 
+    
+
 def first_move():
     print_round()
     print_board()
     print_score()
     print_letters()
-    replace_letters()
     
     while True: #input loop
         w,c,d = user_input()
@@ -551,7 +589,7 @@ def first_move():
                 pts = score(word_table,len(w))
                 print('Ce mouvement vous donne',pts,'points.')
             
-                ans = input('Voulez-vous placer ce mot ? (y/n): ')
+                ans = input('Voulez-vous placer ce mot ? (y/n) : ')
                 if ans == 'y':
                     remove_letters(w)
                     add_score(pts)
@@ -567,7 +605,31 @@ def game():
         print_board()
         print_score()
         print_letters()
-        replace_letters()
+        act = print_actions()
+        
+        #Play word
+        if act == 1:
+            pass
+        
+        #Re-pull
+        if act == 2:
+            replace_letters()
+            continue
+            
+        #Skip
+        if act == 3:
+            continue
+            
+        #Forfeit
+        if act == 4:
+            final_scores()
+            break
+            
+        #End game
+        if act == 5:
+            final_scores()
+            break
+        
         
         while True: #input loop
             w,c,d = user_input()
@@ -596,7 +658,12 @@ def final_scores():
     #Puts the new scores back into the board and prints them
     for i in range(len(score_board[0])):
         score_board[1][i] = str(scores[i])
-    print('GAME OVER !')
+    
+    print(('\n')*2)
+    
+    for line in end_title:
+        print(line)
+    print(('\n')*2)
     print('Les scores ultimes sont :')
     print_score()
     
@@ -618,19 +685,9 @@ def final_scores():
     else:
         winner = score_board[0][scores.index(best_score)]
         print('Le gagnant est '+winner+' !')
-
-def skip():
-    ans= input("écrivez le mot 'skip' si vous n'aimeriez pas jouer ce tour: ")
-    ans1= input("écrivez le mot 'endgame' si vous aimeriez terminer ce jeu de scrabble: ")
-    if ans == 'skip':
-            print_round()
-    elif ans1 =="endgame":
-        final_scores()
-    '''skip+=1
-       if skip==2:
-        ans = input('Aimeriez-vous terminer ce jeu? (y,n):')
-        if ans == 'y':'''
         
+    
+
 #PROGRAMME ------------------------------------------------------------------------------
     
 title_screen()

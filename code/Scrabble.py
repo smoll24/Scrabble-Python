@@ -381,6 +381,8 @@ def has_letters(letters):
 
 def test_letters(letters):
     global jetons_joueurs
+    #delete extra letters
+    jetons_joueurs[current_player-1] = jetons_joueurs[current_player-1][:7]
     
     valide, let = has_letters(letters)
     

@@ -113,11 +113,11 @@ def mot_valide(mot):
     mot = mot.lower()
     
     if len(mot) < 2:
-        print('Word must be longer than 2 letters.')
+        print('Le mot doit avoir plus de 2 lettres.')
         return False
     
     if scrabble_words and mot not in scrabble_words:
-        print('Word not a valid scrabble word.')
+        print("Ce mot n'est pas un mot de scrabble valide.")
         return False
         
     return True
@@ -272,7 +272,7 @@ def score(word_table,n_letters):
                 total *= plateau[cord][1]
             
     if n_letters >=7: #using all 7 tiles bonus
-        print('BINGO!')
+        print('BINGO !')
         total += 50
     
     return total
@@ -404,6 +404,7 @@ def replace_letters():
     print_letters()
 
 def preview_board(word_table):
+    print()
     print('  ',end='')
     for i in range(15):
         print(' '+chr(i+97), end = '')
@@ -471,10 +472,12 @@ def test_word(word,cord,direct):
     
     if not connected:
         valide = False
+        print("\u001b[31mINVALIDE\u001b[0m")
         print("Le mot n'est pas relié à un autre.")
     
     if off_board:
         valide = False
+        print("\u001b[31mINVALIDE\u001b[0m")
         print("Le mot ne tient pas sur le plateau.")
     
     #Calculate points
@@ -482,7 +485,7 @@ def test_word(word,cord,direct):
         pts = score(word_table,len(new_table.values()))
         print('Ce mouvement vous donne',pts,'points.')
     
-        ans = input('Voulez-vous placer ce mot ? (y/n): ')
+        ans = input('Voulez-vous placer ce mot ? (y/n) : ')
         if ans == 'y':
           remove_letters(new_table.values())
           add_score(pts)
@@ -497,19 +500,19 @@ def user_input():
     while True:
         try:
             while True:
-                mot = input("Saissisez un mot que vous souhaitez placer sur le plateau: ")
+                mot = input("Saissisez un mot que vous souhaitez placer sur le plateau : ")
                 if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
                     break
             
             while True:
                 range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
                 range_letters='abcdefghijklmno'
-                location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1): ")
+                location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1) : ")
                 if len(location)<=3: 
                     if range_letters.find(location[0])!=-1 and int(location[1:]) in range_num:
                         break
             while True:
-                orientation = input("Saissisez une orientation horizontale ou verticale pour votre mot (h/v): ")
+                orientation = input("Saissisez une orientation horizontale ou verticale pour votre mot (h/v) : ")
                 if orientation[0] == 'v' or orientation[0]=='h':
                     break
         except:

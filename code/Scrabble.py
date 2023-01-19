@@ -619,6 +619,18 @@ def final_scores():
         winner = score_board[0][scores.index(best_score)]
         print('Le gagnant est '+winner+' !')
 
+def skip():
+    ans= input("écrivez le mot 'skip' si vous n'aimeriez pas jouer ce tour: ")
+    ans1= input("écrivez le mot 'endgame' si vous aimeriez terminer ce jeu de scrabble: ")
+    if ans == 'skip':
+            print_round()
+    elif ans1 =="endgame":
+        final_scores()
+    '''skip+=1
+       if skip==2:
+        ans = input('Aimeriez-vous terminer ce jeu? (y,n):')
+        if ans == 'y':'''
+        
 #PROGRAMME ------------------------------------------------------------------------------
     
 title_screen()

@@ -82,6 +82,7 @@ for let, nb in jetons_nbre.items():
         bag.append(let)
         
 jetons_joueurs = {}
+auto_lose = False
 
 #DEFINITION DES FONCTIONS ---------------------------------------------------------------
 
@@ -636,6 +637,7 @@ def first_move():
     distrib_letters()
 
 def game():
+    global current_player
     first_move()
     
     while True: #game loop
@@ -653,8 +655,16 @@ def game():
             continue
             
         elif act == 4: #Forfeit
-            final_scores()
-            break
+            print("\u001b[33mJoueur "+str(current_player)+" ("+score_board[0][current_player-1]+") a quitté le jeu.\u001b[0m")
+            score_board[0].pop(current_player-1)
+            score_board[1].pop(current_player-1)
+            current_player -= 1
+            if len(score_board[0]) == 1:
+                auto_lose = True
+                final_scores()
+                break
+            else:
+                continue
             
         elif act == 5: #End game
             final_scores()
@@ -671,6 +681,7 @@ def game():
 
 def final_scores():
     '''Function called if both players skip their turn and they answer 'yes' to stopping game'''
+    global auto_lose
     #Makes a new list with the scores in the form of ints
     scores = [int(x) for x in score_board[1]]
     
@@ -701,21 +712,25 @@ def final_scores():
     best_score = max(scores)
     best_count = scores.count(best_score)
     
-    #If there is a tie, find and print the winners
-    if best_count > 1:
-        winners = []
-        for i,score in enumerate(score_board[1]):
-            if int(score) == best_score:
-                winners.append(score_board[0][i])
-                
-        winners[-1] = 'et '+str(winners[-1])
-        print('Le jeu est à égalité. Les gagnants sont '+(", ".join(str(x) for x in winners))+' !')
-    
-    #If there is no tie, print the winner
-    else:
-        winner = score_board[0][scores.index(best_score)]
-        print('Le gagnant est '+winner+' !')
+    if auto_lose == True:
+        print('Le gagnant est '+score_board[0][0]+' !')
         
+    else:
+        #If there is a tie, find and print the winners
+        if best_count > 1:
+            winners = []
+            for i,score in enumerate(score_board[1]):
+                if int(score) == best_score:
+                    winners.append(score_board[0][i])
+                    
+            winners[-1] = 'et '+str(winners[-1])
+            print('Le jeu est à égalité. Les gagnants sont '+(", ".join(str(x) for x in winners))+' !')
+        
+        #If there is no tie, print the winner
+        else:
+            winner = score_board[0][scores.index(best_score)]
+            print('Le gagnant est '+winner+' !')
+            
     
 
 #PROGRAMME ------------------------------------------------------------------------------

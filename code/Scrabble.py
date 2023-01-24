@@ -2,7 +2,7 @@ import random
 
 # Read in the French Scrabble word list from a file
 fr_word_list_path = 'french_scrabble_words2.txt'
-en_word_list_path = 'english_scrabble_words.txt'
+en_word_list_path = 'english_scrabble_words2.txt'
 scrabble_words_fr = None
 scrabble_words_en = None
 scrabble_words = None
@@ -166,7 +166,11 @@ def title_screen():
                     scrabble_words = scrabble_words_en
                 elif ans == 'fr':
                     scrabble_words = scrabble_words_fr
-        
+    
+    #we need them to be lower case
+    if scrabble_words and not scrabble_words[0].islower():
+        scrabble_words = [x.lower() for x in scrabble_words]
+    
     #Gets number of players
     print()
     num_players = 0

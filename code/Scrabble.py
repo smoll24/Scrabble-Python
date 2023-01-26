@@ -651,11 +651,20 @@ def game():
         print_letters()
         act = print_actions()
         
+        if act == 3: #Skip
+            skip += 1
+            if skip >= len(score_board[0]):
+                
+                ans = input('All players have skipped in a row, would you like to end the game? (y/n): ')
+                if ans == "y":
+                    final_scores()
+                    break
+            continue
+        else:
+            skip = 0
+            
         if act == 2: #Re-pull
             replace_letters()
-            continue
-            
-        elif act == 3: #Skip
             continue
             
         elif act == 4: #Forfeit

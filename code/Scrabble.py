@@ -643,6 +643,7 @@ def first_move():
 def game():
     global current_player
     first_move()
+    skip = 0
     
     while True: #game loop
         print_round()

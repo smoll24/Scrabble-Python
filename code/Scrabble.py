@@ -22,7 +22,7 @@ except:
 
 #Dictionaries with ANSI color escape codes
 couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m","bg_jaune":"\u001b[43m","bg_vert":"\u001b[42m",'bg_blanc':'\u001b[47m',"bg_magenta":"\u001b[45m","bg_cyan":"\u001b[46m","bg_bleu":"\u001b[44m",
-           'txt_noir':'\u001b[30m',"txt_blanc":"\u001b[37m","clear":"\033[0m"}
+           'txt_noir':'\u001b[30m',"txt_blanc":"\u001b[37m","txt_rouge":"\u001b[31m","clear":"\033[0m"}
 couleurs_loc= {"m2":couleur['bg_magenta'],"m3":couleur['bg_rouge'],"l2":couleur['bg_cyan'],"l3":couleur['bg_bleu']}
 
 current_round = 0
@@ -303,8 +303,11 @@ def print_letters():
         c = get_power(jetons_pts.get(let))
         print_letters.append(let+c)
     
-    print("LETTRES DU JOUEUR",current_player)
-    print(*print_letters)
+    if len(jetons_joueurs[current_player-1]) > 0:
+        print("LETTRES DU JOUEUR",current_player)
+        print(*print_letters)
+    else:
+        print(couleur["txt_rouge"]+"Vous n'avez plus de jetons!""+couleur["clear"])
     
 def distrib_letters():
     global bag, jetons_joueurs
@@ -510,12 +513,12 @@ def test_word(word,cord,direct):
     
     if not connected:
         valide = False
-        print("\u001b[31mINVALIDE\u001b[0m")
+        print(couleur["txt_rouge"]+"INVALIDE"+couleur["clear"])
         print("Le mot n'est pas relié à un autre.")
     
     if off_board:
         valide = False
-        print("\u001b[31mINVALIDE\u001b[0m")
+        print(couleur["txt_rouge"]+"INVALIDE"+couleur["clear"])
         print("Le mot ne tient pas sur le plateau.")
     
     #Calculate points

@@ -316,9 +316,6 @@ def distrib_letters():
                 jeton_rnd = random.choice(bag)
                 jetons_joueurs[current_player-1].append(jeton_rnd)
                 bag.remove(jeton_rnd)
-            else:
-                print("Il n'y a plus de lettres.")
-                break
 
 def place_let(let, cord):
     '''Places a letter on the board

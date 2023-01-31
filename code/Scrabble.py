@@ -87,7 +87,7 @@ auto_lose = False
 #DEFINITION DES FONCTIONS ---------------------------------------------------------------
 
 def initialise_board():
-    '''Adds the multipleir squares onto the board'''
+    '''Adds the multiplier squares onto the board'''
     #add in multiplier squares and colors
     for cord, value in plateau.items():
         i, j = cord
@@ -103,19 +103,21 @@ def initialise_letters():
             jeton_rnd = random.choice(bag)
             temp_jetons.append(jeton_rnd)
             bag.remove(jeton_rnd)
+        #give the player their starting hand
         jetons_joueurs[player] = temp_jetons
     
 def mot_valide(mot):
     '''Check if a word is valid for Scrabble
     Input: mot - string of letters
     Returns: bool'''
+    #our langauge dicts are in uppercase
+    mot = mot.upper()
     
-    mot = mot.lower()
-    
-    if len(mot) < 2:
-        print('Le mot doit avoir plus de 2 lettres.')
+    if len(mot) < 2: #scrabble words need to be at least 2 chrs
+        print('Le mot doit avoir au moins 2 lettres.')
         return False
     
+    #we test if scrabble_words exists as it may not if they do not have the txt file
     if scrabble_words and mot not in scrabble_words:
         print("Ce mot n'est pas un mot de scrabble valide.")
         return False
@@ -123,10 +125,10 @@ def mot_valide(mot):
     return True
 
 def title_screen():
-    '''Initialises the game and displays the title'''
+    '''Core function that initialises the game and displays the title'''
     global num_players, score_board, scrabble_words
     
-    for line in title:
+    for line in title: #prints title
         print(line)
     print(('\n')*2)
     
@@ -167,9 +169,9 @@ def title_screen():
                 elif ans == 'fr':
                     scrabble_words = scrabble_words_fr
     
-    #we need them to be lower case
-    if scrabble_words and not scrabble_words[0].islower():
-        scrabble_words = [x.lower() for x in scrabble_words]
+    #we need the language dict to be upper case
+    if scrabble_words and not scrabble_words[0].isupper():
+        scrabble_words = [x.upper() for x in scrabble_words]
     
     #Gets number of players
     print()
@@ -230,7 +232,7 @@ def print_score():
     for i in range(len(score_board[1])):
         temp_len += len(score_board[1][i])
         
-    #If seecond row is bigget takes second row length
+    #If second row is bigger: takes second row length
     if temp_len > len_row:
         len_row = temp_len
 
@@ -261,6 +263,11 @@ def print_score():
     print()
 
 def score(word_table,n_letters):
+    ''' Calculates the score of a move
+    Input: word_table - dict of tuple:string
+           n_letters - int
+    Returns: total - int '''
+    
     total = 0
     for cord,let in word_table.items(): #score letters
         num = jetons_pts[let]
@@ -282,7 +289,10 @@ def score(word_table,n_letters):
     
     return total
 
-def get_power(num):
+def get_superscript(num):
+    '''Converts number to superscript
+    Input: num - int
+    Returns: c - chr'''
     if num == 1:
         c = chr(0x00b9)
     elif 2 <= num <= 3:
@@ -300,14 +310,14 @@ def print_letters():
 
     print_letters = []
     for let in jetons_joueurs[current_player-1]:
-        c = get_power(jetons_pts.get(let))
+        c = get_superscript(jetons_pts.get(let))
         print_letters.append(let+c)
     
     if len(jetons_joueurs[current_player-1]) > 0:
         print("LETTRES DU JOUEUR",current_player)
         print(*print_letters)
     else:
-        print(couleur["txt_rouge"]+"Vous n'avez plus de jetons!""+couleur["clear"])
+        print(couleur["txt_rouge"]+"Vous n'avez plus de jetons!"+couleur["clear"])
     
 def distrib_letters():
     global bag, jetons_joueurs
@@ -325,21 +335,22 @@ def place_let(let, cord):
     Input: let - single chr string that isalpha
            cord - tuple countaining two ints (x,y)'''
     x,y = cord
-    c = get_power(jetons_pts.get(let))
+    c = get_superscript(jetons_pts.get(let))
     board[y][x] = let.upper()+c
 
 def get_word_table(word, cord, direct):
     '''Creates a dict of all the letter's cordinates in a word
-    Input: let - single chr string that isalpha
+    Input: word - string
            cord - tuple countaining two ints (x,y)
            direct - bool True is right and False is down
-    Returns: word_table - dict of tuple:string '''
+    Returns: word_table - dict of tuple:string
+             or False if it cannot'''
     word_table = {}
     x,y = cord
     length = len(word)
     
+    #check that the player spells the full word when attaching to another word
     valide = True
-    
     if direct == True: #horizontal
         if x !=0 and board[y][x-1][0].isupper():
             valide = False
@@ -355,6 +366,7 @@ def get_word_table(word, cord, direct):
         print('Épelez le mot en entier !')
         return False
     
+    #create the word_table
     for i in range(length):
         word_table[x,y] = word[i]
         
@@ -366,6 +378,9 @@ def get_word_table(word, cord, direct):
     return word_table
 
 def place_word(word, cord, direct):
+    '''Input: word - string
+           cord - tuple countaining two ints (x,y)
+           direct - bool True is right and False is down'''
     word_table = get_word_table(word, cord, direct)
     for cord, let in word_table.items():
         place_let(let,cord)
@@ -388,7 +403,12 @@ def has_letters(letters):
     return True, None
 
 def test_letters(letters):
+    '''Tests if the current player has the required letters
+        and if they don't asks if they want to use their jokers
+    Input: letters - iterable of strings
+    Returns: bool'''
     global jetons_joueurs
+    
     #delete extra letters
     jetons_joueurs[current_player-1] = jetons_joueurs[current_player-1][:7]
     
@@ -430,7 +450,7 @@ def remove_letters(letters):
     print('Vous avez utilisé',*letters)
 
 def replace_letters():
-    '''Putts player's letters in the bag and draws 7 new ones'''
+    '''Puts player's letters in the bag and draws 7 new ones'''
     for i in range(7):
         bag.append(jetons_joueurs[current_player-1][i])
         
@@ -445,6 +465,9 @@ def replace_letters():
     print_letters()
 
 def preview_board(word_table):
+    ''' Prints a preview of the board with the unplayed move of word_table
+    Input: word_table - dict of tuple:string'''
+    
     print()
     print('  ',end='')
     for i in range(15):
@@ -455,7 +478,7 @@ def preview_board(word_table):
         for x,elt in enumerate(row):
             if (x,y) in word_table:
                 let = word_table[(x,y)]
-                c = get_power(jetons_pts.get(let))
+                c = get_superscript(jetons_pts.get(let))
                 
                 if elt[0].isupper(): #if it is a jeton
                     if elt[0] == let:
@@ -470,12 +493,17 @@ def preview_board(word_table):
 
 def add_score(pts):
     global score_board
-    #Add score to scoreboard
+    #Add score to scoreboard of the current player
     score = int(score_board[1][current_player-1])
     score += pts
     score_board[1][current_player-1] = str(score)
 
 def test_word(word,cord,direct):
+    ''' Tests if a move can be played or not and asks if they want to play it
+    Input: word - string
+           cord - tuple countaining two ints (x,y)
+           direct - bool True is right and False is down
+    Return: bool'''
     word_table = get_word_table(word,cord,direct)
     if not word_table:
         return False
@@ -537,6 +565,10 @@ def test_word(word,cord,direct):
 
 
 def user_input():
+    '''Gets the information from the player for a move
+    Returns: word - string
+            cord - tuple countaining two ints (x,y)
+            direct - bool True is right and False is down'''
     print()
     while True:
         mot = input("Saissisez un mot que vous souhaitez placer sur le plateau : ")
@@ -607,6 +639,7 @@ def print_actions():
     
 
 def first_move():
+    '''The first move is different from the others'''
     print_round()
     print_board()
     print_score()
@@ -748,13 +781,12 @@ def final_scores():
             winner = score_board[0][scores.index(best_score)]
             print('Le gagnant est '+winner+' !')
             
-    
+
 
 #PROGRAMME ------------------------------------------------------------------------------
-    
+
 title_screen()
 initialise_board()
 initialise_letters()
 
-#print('Pour jouer, appelez game()')
 game()

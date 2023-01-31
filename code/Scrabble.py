@@ -309,13 +309,16 @@ def print_letters():
 def distrib_letters():
     global bag, jetons_joueurs
     #Distributes random letters for players
-    if len(bag) > 0:
-        if len(jetons_joueurs[current_player-1]) < 7:
-            for i in range(7-len(jetons_joueurs[current_player-1])):
+    if len(jetons_joueurs[current_player-1]) < 7:
+        for i in range(7-len(jetons_joueurs[current_player-1])):
+            if len(bag) > 0:
                 #Picks a random jetons from the bag
                 jeton_rnd = random.choice(bag)
                 jetons_joueurs[current_player-1].append(jeton_rnd)
                 bag.remove(jeton_rnd)
+            else:
+                print("Il n'y a plus de lettres.")
+                break
 
 def place_let(let, cord):
     '''Places a letter on the board

@@ -22,7 +22,7 @@ except:
 
 #Dictionaries with ANSI color escape codes
 couleur = {"bg_noir":'\u001b[40m',"bg_rouge":"\u001b[41m","bg_jaune":"\u001b[43m","bg_vert":"\u001b[42m",'bg_blanc':'\u001b[47m',"bg_magenta":"\u001b[45m","bg_cyan":"\u001b[46m","bg_bleu":"\u001b[44m",
-           'txt_noir':'\u001b[30m',"txt_blanc":"\u001b[37m","txt_rouge":"\u001b[31m","clear":"\033[0m"}
+           'txt_noir':'\u001b[30m',"txt_blanc":"\u001b[37m","txt_rouge":"\u001b[31m","txt_vert":"\u001b[32m","clear":"\033[0m"}
 couleurs_loc= {"m2":couleur['bg_magenta'],"m3":couleur['bg_rouge'],"l2":couleur['bg_cyan'],"l3":couleur['bg_bleu']}
 
 current_round = 0
@@ -74,6 +74,55 @@ end_title = [
  "| | |_ |/ _` | '_ ` _ \ / _ \ | |  | \ \ / / _ \ '__| | |",
  '| |__| | (_| | | | | | |  __/ | |__| |\ V /  __/ |    |_|',
  ' \_____|\__,_|_| |_| |_|\___|  \____/  \_/ \___|_|    (_)']
+
+
+
+#Regles du jeu
+regles = """\n\n\u001b[32m\033[1mRègles\033[0m\n\n\
+\u001b[32mCe jeu de Scrabble suit en grande partie les règles du Scrabble classique, avec quelques modifications.\
+\u001b[32m\n\n\033[1mAvant de commencer le jeu\033[0m\n\n\
+\u001b[32m[•] Dictionnaires : Vous pouvez choisir entre un dictionnaire français, anglais ou sans dictionnaire.\n\
+\u001b[32mCela aura un impact sur les mots que vous pourrez jouer. Gardez à l'esprit que si vous choisissez de \n\
+\u001b[32mjouer en anglais, le score et le nombre de lettres seront déséquilibrés pour faire la différence de \n\
+\u001b[32mfréquence des lettres entre les langues.\n\
+\u001b[32m[•] Nombre de joueurs : de 2 à 10.\n\
+\u001b[32m[•] But du jeu : Cumuler le plus de points en formant des mots entrecroisés sur une grille de 15×15 cases.\n\
+\u001b[32mLes lettres possèdent des valeurs différentes et les cases, selon leur couleur peuvent multiplier la valeur\n\
+\u001b[32mdes lettres (cases bleues) ou des mots (cases rouges).\n\n\
+\u001b[32m\033[1mPlacer un mot\033[0m\n\n\
+\u001b[32m[•] Longueur minimum : deux lettres.\n\
+\u001b[32m[•] Premier mot : Le premier mot doit toujours couvrir la case centrale (h8).\n\
+\u001b[32m[•] Placement des mots suivants : soit perpendiculairement, soit parallèlement à un mot déjà placé.\n\
+\u001b[32m[•] Sens d’écriture : Les mots doivent toujours être écrits de gauche à droite ou de haut en bas.\n\
+\u001b[32m[•] Prolonger un mot : Possibilité de continuer un mot déjà placé en le prolongeant par l’avant, \n\
+\u001b[32ml’arrière ou les deux à la fois.\n\n\
+\u001b[32m\033[1mAutres actions par tour\033[0m\n\n\
+\u001b[32mChaque tour, le joueur peut soit placer un mot ou il peut :\n\
+\u001b[32m[•] Tirer à nouveau ses lettres : Le joueur recycle toutes ses lettres et en choisit 7 nouvelles\n\
+\u001b[32mau hasard, mais son tour est sauté.\n\
+\u001b[32m[•] Passer son tour : Le joueur passe son tour. Si tous les joueurs sautent leur tour consécutivement,\n\
+\u001b[32mle jeu vous demandera si vous souhaitez terminer la partie.\n\
+\u001b[32m[•] Abandonner : Vous pouvez quitter le jeu entièrement, et vous serez retiré du jeu pendant que\n\
+\u001b[32mles autres continuent à jouer.\n\
+\u001b[32m[•] Terminer le jeu : Le jeu est terminé pour tous les joueurs et les scores sont calculés.\n\n\
+\u001b[32m\033[1mCalcul du score\033[0m\n\n\
+\u001b[32mChaque lettre a une valeur indiquée dans son angle supérieur droit.\n\
+\u001b[32mLes jokers prennent la valeur de la lettre qu’ils deviennent.\n\n\
+\u001b[32mLes cases, selon leur couleur peuvent multiplier la valeur des lettres :\n\
+\u001b[32m[•] l2 (bleue claire) : double la valeur de la lettre (x2)\n\
+\u001b[32m[•] l3 (bleue foncée) : triple la valeur de la lettre (x3)\n\
+\u001b[32m[•] m2 (rose) : double la valeur du mot (x2)\n\
+\u001b[32m[•] m3 (rouge) : triple la valeur du mot (x3)\n\n\
+\u001b[32mDès qu’une case de couleur est recouverte, elle perd son effet multiplicateur.\n\n\
+\u001b[32m[•] Mots formés simultanément : Lorsque deux ou plusieurs mots sont formés lors d’un même coup, les\n\
+\u001b[32mvaleurs de chacun de ces mots se cumulent.\n\
+\u001b[32m[•] Le bonus « Bingo » : Tout joueur plaçant ses sept lettres en un seul coup (« Bingo ») reçoit une\n\
+\u001b[32mbonification de 50 points.\n\n\
+\u001b[32m\033[1mCalcul du gagnant\033[0m\n\n\
+\u001b[32mÀ la fin de la partie, le score de chaque joueur est diminué de la somme de ses lettres non jouées.\n\
+\u001b[32mDe plus, si un joueur a utilisé toutes ses lettres, la somme des lettres non jouées des autres joueurs\n\
+\u001b[32mest ajoutée au score de ce joueur.\033[0m"""
+
 
 #create bag which we will pull from to get letters
 bag = []
@@ -132,7 +181,12 @@ def title_screen():
         print(line)
     print(('\n')*2)
     
-    begin = input((' ')*35+'Commencer ? ')
+    #Option to print the rules or simply begin the game
+    print(couleur['txt_vert']+(' ')*23+"('/règles' pour lire les règles)\n"+couleur['clear'])
+    begin = input((' ')*35+"Commencer ? ")
+    if begin == "/règles" or begin == "/regles":
+        print(regles)
+        
     print(('\n')*2)
     
     #Ask if they want the wordchecker

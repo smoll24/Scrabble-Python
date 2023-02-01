@@ -524,7 +524,7 @@ def test_word(word,cord,direct):
             off_board = True
         else:
             if board[y][x][0].isupper(): #if it is a jeton
-                if board[y][x][0] != let: #[0] cuz only the letter
+                if board[y][x][0] != let: #[0] because we only need the letter
                     valide = False
                 else:
                     connected = True

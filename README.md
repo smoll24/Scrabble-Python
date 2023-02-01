@@ -1,4 +1,4 @@
-# Scrabble Python 
+# Scrabble Python (EN)
 This is a French Python implementation of the popular word game Scrabble. The game can be played in the Python shell, and it features a large dictionary of French words to choose from. It is also available in English, but the balancing will be off due to the frequency of English letters being different from those in French.
 
 ### Getting Started
@@ -18,7 +18,9 @@ Each round, players will draw seven letters from the Scrabble tile bag and use t
 - The French word list used in this game was sourced from https://chrplr.github.io/openlexicon/datasets-info/Liste-de-mots-francais-Gutenberg/liste.de.mots.francais.frgut.txt 
 - The English word list was sourced from https://www.mit.edu/~ecprice/wordlist.10000
 
-# Scrabble Python 
+
+
+# Scrabble Python (FR)
 Ceci est une implémentation Python du célèbre jeu de mots Scrabble. Le jeu peut être joué dans le shell Python, et il dispose d'un grand dictionnaire de mots français à choisir. Il est également disponible en anglais, mais l'équilibrage sera décalé en raison de la fréquence des lettres anglaises qui est différente de celle des lettres françaises.
 
 ### Démarrage du jeu

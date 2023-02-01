@@ -83,7 +83,7 @@ regles = """\n\n\u001b[32m\033[1mRègles\033[0m\n\n\
 \u001b[32m\n\n\033[1mAvant de commencer le jeu\033[0m\n\n\
 \u001b[32m[•] Dictionnaires : Vous pouvez choisir entre un dictionnaire français, anglais ou sans dictionnaire.\n\
 \u001b[32mCela aura un impact sur les mots que vous pourrez jouer. Gardez à l'esprit que si vous choisissez de \n\
-\u001b[32mjouer en anglais, le score et le nombre de lettres seront déséquilibrés à cause de la différence de \n\
+\u001b[32mjouer en anglais, le score et le nombre de lettres seront déséquilibrés pour faire la différence de \n\
 \u001b[32mfréquence des lettres entre les langues.\n\
 \u001b[32m[•] Nombre de joueurs : de 2 à 10.\n\
 \u001b[32m[•] But du jeu : Cumuler le plus de points en formant des mots entrecroisés sur une grille de 15×15 cases.\n\
@@ -95,9 +95,7 @@ regles = """\n\n\u001b[32m\033[1mRègles\033[0m\n\n\
 \u001b[32m[•] Placement des mots suivants : soit perpendiculairement, soit parallèlement à un mot déjà placé.\n\
 \u001b[32m[•] Sens d’écriture : Les mots doivent toujours être écrits de gauche à droite ou de haut en bas.\n\
 \u001b[32m[•] Prolonger un mot : Possibilité de continuer un mot déjà placé en le prolongeant par l’avant, \n\
-\u001b[32ml’arrière ou les deux à la fois (Attention ! Cela nécessite d'écrire le mot en entier.)\n\
-\u001b[32m[•] Afin d'utiliser un joker, épelez le mot que vous souhaitez placer et le jeu vous demandera si \n\
-\u001b[32mvous souhaitez utiliser votre joker.\n\n\
+\u001b[32ml’arrière ou les deux à la fois.\n\n\
 \u001b[32m\033[1mAutres actions par tour\033[0m\n\n\
 \u001b[32mChaque tour, le joueur peut soit placer un mot ou il peut :\n\
 \u001b[32m[•] Tirer à nouveau ses lettres : Le joueur recycle toutes ses lettres et en choisit 7 nouvelles\n\
@@ -110,7 +108,7 @@ regles = """\n\n\u001b[32m\033[1mRègles\033[0m\n\n\
 \u001b[32m\033[1mCalcul du score\033[0m\n\n\
 \u001b[32mChaque lettre a une valeur indiquée dans son angle supérieur droit.\n\
 \u001b[32mLes jokers prennent la valeur de la lettre qu’ils deviennent.\n\n\
-\u001b[32mLes cases, selon leur couleur peuvent multiplier la valeur des lettres ou des mots :\n\
+\u001b[32mLes cases, selon leur couleur peuvent multiplier la valeur des lettres :\n\
 \u001b[32m[•] l2 (bleue claire) : double la valeur de la lettre (x2)\n\
 \u001b[32m[•] l3 (bleue foncée) : triple la valeur de la lettre (x3)\n\
 \u001b[32m[•] m2 (rose) : double la valeur du mot (x2)\n\
@@ -118,7 +116,7 @@ regles = """\n\n\u001b[32m\033[1mRègles\033[0m\n\n\
 \u001b[32mDès qu’une case de couleur est recouverte, elle perd son effet multiplicateur.\n\n\
 \u001b[32m[•] Mots formés simultanément : Lorsque deux ou plusieurs mots sont formés lors d’un même coup, les\n\
 \u001b[32mvaleurs de chacun de ces mots se cumulent.\n\
-\u001b[32m[•] Le bonus « Bingo » : Si un joueur plaçe ses sept lettres en un seul coup (« Bingo »), il reçoit une\n\
+\u001b[32m[•] Le bonus « Bingo » : Tout joueur plaçant ses sept lettres en un seul coup (« Bingo ») reçoit une\n\
 \u001b[32mbonification de 50 points.\n\n\
 \u001b[32m\033[1mCalcul du gagnant\033[0m\n\n\
 \u001b[32mÀ la fin de la partie, le score de chaque joueur est diminué de la somme de ses lettres non jouées.\n\
@@ -184,9 +182,9 @@ def title_screen():
     print(('\n')*2)
     
     #Option to print the rules or simply begin the game
-    print(couleur['txt_vert']+(' ')*23+"('/r' pour lire les règles)\n"+couleur['clear'])
+    print(couleur['txt_vert']+(' ')*25+"('/règles' pour lire les règles)\n"+couleur['clear'])
     begin = input((' ')*35+"Commencer ? ")
-    if '/r' in begin:
+    if begin == "/règles" or begin == "/regles":
         print(regles)
         
     print(('\n')*2)

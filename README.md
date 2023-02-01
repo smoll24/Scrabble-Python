@@ -38,4 +38,3 @@ Pour commencer à jouer, il suffit de cloner ou de télécharger ce dépôt et d
 - La liste de mots français utilisée dans ce jeu provient de https://chrplr.github.io/openlexicon/datasets-info/Liste-de-mots-francais-Gutenberg/liste.de.mots.francais.frgut.txt. 
 - La liste de mots anglais provient de https://www.mit.edu/~ecprice/wordlist.10000.
 
-Traduit avec www.DeepL.com/Translator (version gratuite)

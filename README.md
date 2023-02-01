@@ -19,7 +19,7 @@ Each round, players will draw seven letters from the Scrabble tile bag and use t
 - The English word list was sourced from https://www.mit.edu/~ecprice/wordlist.10000
 
 
-
+---
 # Scrabble Python (FR)
 Ceci est une implémentation Python du célèbre jeu de mots Scrabble. Le jeu peut être joué dans le shell Python, et il dispose d'un grand dictionnaire de mots français à choisir. Il est également disponible en anglais, mais l'équilibrage sera décalé en raison de la fréquence des lettres anglaises qui est différente de celle des lettres françaises.
 

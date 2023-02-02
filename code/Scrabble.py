@@ -747,7 +747,7 @@ def game():
             skip += 1
             if skip >= len(score_board[0]):
                 
-                ans = input('All players have skipped in a row, would you like to end the game? (y/n): ')
+                ans = input('Tous les joueurs ont sauté leur tour consécutivement, voulez-vous terminer le jeu ? (y/n): ')
                 if ans == "y":
                     final_scores()
                     break

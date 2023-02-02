@@ -561,14 +561,14 @@ def test_word(word,cord,direct):
            direct - bool True is right and False is down
     Return: bool'''
     word_table = get_word_table(word,cord,direct)
-    if not word_table:
+    if not word_table: 
         return False
     
     valide = True
     off_board = False
     connected = False
     
-    #test location and create new_table containing all the required jetons
+    #test location and create new_table containing all the jetons required to play the move
     #also check that there is at least 1 connection
     new_table = {}
     for cord,let in word_table.items():
@@ -585,15 +585,14 @@ def test_word(word,cord,direct):
                 else:
                     connected = True
             else:
-                new_table[(x,y)] = let
+                new_table[(x,y)] = let #this letter is required add it too new_table
     
     #check that they have the jetons
     check = test_letters(new_table.values())
     if not check:
-            return False
+        return False
     
-    #preview board
-    preview_board(word_table)
+    preview_board(word_table) #print a preview
     
     if not connected:
         valide = False
@@ -713,7 +712,7 @@ def first_move():
             continue
         
         for cord in word_table.keys():
-            if cord == (7,7):
+            if cord == (7,7): #check that at least one letter is in the center
                 in_center = True
         preview_board(word_table)
         

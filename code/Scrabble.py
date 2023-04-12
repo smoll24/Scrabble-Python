@@ -162,6 +162,9 @@ def mot_valide(mot):
     Returns: bool'''
     mot = mot.upper() #nos dictionnaires de langue txt sont en majuscules
     
+    if not mot.isalpha(): #vérifie que le mot ne fait pas partie de l'alphabet
+        return False
+    
     if len(mot) < 2: #les mots du scrabble doivent être composés d'au moins 2 chrs
         print('Le mot doit avoir au moins 2 lettres.')
         return False
@@ -513,7 +516,7 @@ def replace_letters():
     jetons_joueurs[current_player-1] = []
     
     for i in range(7):
-        #Picks a random jetons from the bag
+        #Pioche un jeton au hasard dans le sac
         jeton_rnd = random.choice(bag)
         jetons_joueurs[current_player-1].append(jeton_rnd)
         bag.remove(jeton_rnd)
@@ -521,13 +524,13 @@ def replace_letters():
     print_letters()
 
 def preview_board(word_table):
-    ''' Prints a preview of the board with the unplayed move of word_table
+    '''Imprime un aperçu du plateau avec le mot non joué de word_table
     Input: word_table - dict of tuple:string'''
     
     print()
     print('  ',end='')
     for i in range(15):
-        print(' '+chr(i+97), end = '')
+        print(' '+chr(i+97), end = '') #chr(i+97) transforme i en lettre ex: 0->a
     print()
     for y,row in enumerate(board):
         print(str(y+1).rjust(2), end = '')
@@ -536,28 +539,29 @@ def preview_board(word_table):
                 let = word_table[(x,y)]
                 c = get_superscript(jetons_pts.get(let))
                 
-                if elt[0].isupper(): #if it is a jeton
-                    if elt[0] == let:
+                #couleur du jeton vvv
+                if elt[0].isupper(): #s'il y a une intersection
+                    if elt[0] == let: #et si la lettre correspond
                         print(couleur['txt_noir']+couleur['bg_vert']+let+c+couleur['clear'], end='')
-                    else:
+                    else: #et la lettre ne correspond pas
                         print(couleur['txt_blanc']+couleur['bg_rouge']+'XX'+couleur['clear'], end='')
-                else:
+                else: #defaut
                     print(couleur['txt_noir']+couleur['bg_jaune']+let+c+couleur['clear'], end='')
             else:
                 print(color_elt(elt), end='')
         print()
 
 def add_score(pts):
+    '''Met à jour le score du joueur sur le tableau de score'''
     global score_board
-    #Add score to scoreboard of the current player
     score = int(score_board[1][current_player-1])
     score += pts
     score_board[1][current_player-1] = str(score)
 
 def test_word(word,cord,direct):
-    ''' Tests if a move can be played or not and asks if they want to play it
+    ''' Teste si un mot peut être joué ou non et demande s'il veut le jouer.
     Input: word - string
-           cord - tuple countaining two ints (x,y)
+           cord - tuple de deux int (x,y)
            direct - bool True is right and False is down
     Return: bool'''
     word_table = get_word_table(word,cord,direct)
@@ -568,31 +572,31 @@ def test_word(word,cord,direct):
     off_board = False
     connected = False
     
-    #test location and create new_table containing all the jetons required to play the move
-    #also check that there is at least 1 connection
+    #tester l'emplacement du mot et créer une nouvelle table contenant tous les jetons nécessaires pour jouer le mouvement
+    #vérifiez également qu'il y a au moins une connexion
     new_table = {}
     for cord,let in word_table.items():
         x,y = cord
         
-        if x < 0 or x > 14: #Check that letter is on the board
+        if x < 0 or x > 14: #Vérifier que le placement est sur le plateau
             off_board = True
         elif y < 0 or y > 14:
             off_board = True
         else:
-            if board[y][x][0].isupper(): #if it is a jeton
-                if board[y][x][0] != let: #[0] because we only need the letter
+            if board[y][x][0].isupper(): #si c'est un jeton
+                if board[y][x][0] != let: #[0] car on a que besoin de la lettre
                     valide = False
                 else:
                     connected = True
             else:
                 new_table[(x,y)] = let #this letter is required add it too new_table
     
-    #check that they have the jetons
+    #vérifier qu'ils ont les jetons
     check = test_letters(new_table.values())
     if not check:
         return False
     
-    preview_board(word_table) #print a preview
+    preview_board(word_table) #imprimer l'aperçu du plateau
     
     if not connected:
         valide = False
@@ -604,7 +608,7 @@ def test_word(word,cord,direct):
         print(couleur["txt_rouge"]+"INVALIDE"+couleur["clear"])
         print("Le mot ne tient pas sur le plateau.")
     
-    #Calculate points
+    #Calculer les points
     if valide:
         pts = score(word_table,len(new_table.values()))
         print('Ce mot vous rapportera',pts,'points.')
@@ -620,18 +624,18 @@ def test_word(word,cord,direct):
 
 
 def user_input():
-    '''Gets the information from the player for a move
+    '''Obtient les informations du joueur pour un mot
     Returns: word - string
-            cord - tuple countaining two ints (x,y)
+            cord - tuple de deux int (x,y)
             direct - bool True is right and False is down'''
     print()
     while True:
         mot = input("Saissisez un mot que vous souhaitez placer sur le plateau : ")
-        if mot.isalpha() and mot_valide(mot): #checks if the letter is not part of the alphabet
+        if mot_valide(mot): 
             break
     
     while True:
-        range_num = range(1,16) #range of numbers from 1 to 15(since 16 is excluded)
+        range_num = range(1,16) #intervalle de nombres de 1 à 15 (puisque 16 est exclu)
         range_letters='abcdefghijklmno'
         location = input("Saissisez un coordonné pour la premiere lettre de votre mot (ex: a1) : ")
         if len(location)<=3:

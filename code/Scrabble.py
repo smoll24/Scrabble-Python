@@ -432,7 +432,8 @@ def get_word_table(word, cord, direct):
     return word_table
 
 def place_word(word, cord, direct):
-    '''Input: word - string
+    '''Place un mot sur le plateau
+        Input: word - string
            cord - tuple countaining two ints (x,y)
            direct - bool True is right and False is down'''
     word_table = get_word_table(word, cord, direct)
@@ -440,12 +441,12 @@ def place_word(word, cord, direct):
         place_let(let,cord)
 
 def has_letters(letters):
-    '''Tests if the current player has the required letters
-    Input: letters - iterable of strings
+    '''Teste si le joueur possède les lettres nécessaires
+    Input: letters - iterable of chr (ex: liste de chr ou string)
     Returns: bool
-             let - first bad letter found'''
+             let - première lettre manquante trouvée'''
     
-    #we don't want to effect the actual player's hand until we know they can play the move
+    #nous ne voulons pas affecter la main du joueur tant que nous ne savons pas si il peut jouer le mot
     current_jetons = jetons_joueurs[current_player-1].copy()
     
     for let in letters:
@@ -457,13 +458,13 @@ def has_letters(letters):
     return True, None
 
 def test_letters(letters):
-    '''Tests if the current player has the required letters
-        and if they don't asks if they want to use their jokers
-    Input: letters - iterable of strings
+    '''Teste si le joueur a les lettres nécessaires
+        et s'il n'en a pas, lui demande s'il veut utiliser ses jokers
+    Input: letters - iterable of chr (ex: liste de chr ou string)
     Returns: bool'''
     global jetons_joueurs
     
-    #delete extra letters
+    #supprimer les lettres supplémentaires
     jetons_joueurs[current_player-1] = jetons_joueurs[current_player-1][:7]
     
     valide, let = has_letters(letters)
@@ -474,7 +475,8 @@ def test_letters(letters):
         
         ans = input('Voulez-vous utiliser un joker pour la lettre '+let+' (y/n) ? ')
         if ans == 'y':
-            #I append the extra letters so that later we can decide to remove the extra letters or the jokers
+            #Ajoute les lettres supplémentaires afin que nous puissions
+            #décider plus tard de supprimer les lettres supplémentaires ou les jokers.
             jetons_joueurs[current_player-1].append(let)
         else:
             break
@@ -483,17 +485,17 @@ def test_letters(letters):
     
     if not valide:
         print("Vous n'avez pas les lettres pour ce mot.")
-        #delete extra letters
+        #supprimer les lettres supplémentaires
         jetons_joueurs[current_player-1] = jetons_joueurs[current_player-1][:7]
             
     return valide
 
 def remove_letters(letters):
-    '''Removes letters from the player's hand
-    Input: letters - iterable of strings'''
+    '''Retire les lettres utilisées de la main du joueur
+    Input: letters - iterable of chr (ex: liste de chr ou string)'''
     global jetons_joueurs
     
-    #remove extra jokers
+    #supprimer les jokers supplémentaires
     over = len(jetons_joueurs[current_player-1]) - 7
     if over > 0:
         for i in range(over):
@@ -504,7 +506,7 @@ def remove_letters(letters):
     print('Vous avez utilisé',*letters)
 
 def replace_letters():
-    '''Puts player's letters in the bag and draws 7 new ones'''
+    '''Met les lettres du joueur dans le sac et en tire 7 nouvelles.'''
     for i in range(7):
         bag.append(jetons_joueurs[current_player-1][i])
         

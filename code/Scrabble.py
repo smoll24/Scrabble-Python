@@ -277,26 +277,26 @@ def print_board():
 def print_score():
     '''Imprime le tableau des scores'''
     print()
-    #Finds the length that the score board will be
+    #Détermine la longueur du tableau d'affichage
     len_row = 0
     temp_len = 0
 
-    #Checks len of first row
+    #Vérifie la longueur de la première rangée
     for i in range(len(score_board[0])):
         len_row += len(score_board[0][i])
         
-    #Checks len of second row
+    #Vérifie la longueur de la deuxième rangée
     for i in range(len(score_board[1])):
         temp_len += len(score_board[1][i])
         
-    #If second row is bigger: takes second row length
+    #Si la deuxième rangée est plus grande : prend la longueur de la deuxième rangée
     if temp_len > len_row:
         len_row = temp_len
 
     len_row += (len(score_board[0])*3)
     line = (('+')+('-')*(len_row-1)+('+'))
 
-    #Finds length on each column
+    #Trouve la longueur de chaque colonne
     len_columns = [' ' for i in range(num_players)]
     temp_row0 = 0
     temp_row1 = 0
@@ -308,7 +308,7 @@ def print_score():
         else:
             len_columns[i] = temp_row1+1
                 
-    #Prints the score board
+    #Imprime le tableau d'affichage
     print('SCOREBOARD')
     print(line)
     for i in range(len(score_board)):
@@ -671,18 +671,18 @@ def print_actions():
                "5. Terminer le jeu"]
     
     print()
-    # Get the maximum length of the row
+    # Obtient la longueur maximale de la rangée
     max_length = max([len(i) for i in actions])
 
-    # Create a top and bottom border
+    # Crée une bordure supérieure et inférieure
     border = "+" + "-"*(max_length+2) + "+"
     print(border)
 
-    # Print each item
+    # Imprime chaque élément
     for el in actions:
         print("| " + el.ljust(max_length) + " |")
 
-    # Print the bottom border
+    # Imprime la bordure du bas
     print(border)
     
     print()
@@ -698,13 +698,13 @@ def print_actions():
     
 
 def first_move():
-    '''The first move is different from the others'''
+    '''La première action est différente des autres'''
     print_round()
     print_board()
     print_score()
     print_letters()
     
-    while True: #input loop
+    while True: #boucle d'entrée
         w,c,d = user_input()
         
         in_center = False
@@ -716,7 +716,7 @@ def first_move():
             continue
         
         for cord in word_table.keys():
-            if cord == (7,7): #check that at least one letter is in the center
+            if cord == (7,7): #vérifie qu'au moins une lettre se trouve au centre
                 in_center = True
         preview_board(word_table)
         
@@ -740,7 +740,7 @@ def game():
     first_move()
     skip = 0
     
-    while True: #game loop
+    while True: #Boucle de jeu
         print_round()
         print_board()
         print_score()
@@ -759,11 +759,11 @@ def game():
         else:
             skip = 0
             
-        if act == 2: #Re-pull
+        if act == 2: #Reprendre ses lettres
             replace_letters()
             continue
             
-        elif act == 4: #Forfeit
+        elif act == 4: #Quitte 
             print("\u001b[33mJoueur "+str(current_player)+" ("+score_board[0][current_player-1]+") a quitté le jeu.\u001b[0m")
             score_board[0].pop(current_player-1)
             score_board[1].pop(current_player-1)
@@ -775,28 +775,28 @@ def game():
             else:
                 continue
             
-        elif act == 5: #End game
+        elif act == 5: #Termine le jeu
             final_scores()
             break 
         
-        #Play word
-        while True: #input loop
+        #joue un mot
+        while True: #boucle de saisie
             w,c,d = user_input()
-            if test_word(w,c,d): #if the move is correct and they want to place it
+            if test_word(w,c,d): #si le mouvement est correct et que le joueur veut le placer
                 place_word(w,c,d)
                 break
         distrib_letters()
 
 
 def final_scores():
-    '''Function called if both players skip their turn and they answer 'yes' to stopping game'''
+    '''Fonction appelée si les deux joueurs passent leur tour et qu'ils répondent "oui" à l'arrêt du jeu.'''
     global auto_lose
-    #Makes a new list with the scores in the form of ints
+    #Crée une nouvelle liste avec les scores sous forme d'ints
     scores = [int(x) for x in score_board[1]]
     
-    #Subtracts the amount of letters the players have left from their scores
+    #Soustrait le nombre de lettres restantes des joueurs de leur score
     for i in range(len(score_board[0])):
-        #If a player has used all of their letters, the sum of the other players' unplayed letters is added to that player's score
+        #Si un joueur a utilisé toutes ses lettres, la somme des lettres non jouées des autres joueurs est ajoutée au score de ce joueur
         if len(jetons_joueurs[i]) == 0:
             for j in range(len(jetons_joueurs)):
                 if i != j:
@@ -805,7 +805,7 @@ def final_scores():
                 if scores[i] > 0:
                     scores[i] -= len(jetons_joueurs[i])
     
-    #Puts the new scores back into the board and prints them
+    #Remettre les nouvelles notes dans le tableau et les imprimer
     for i in range(len(score_board[0])):
         score_board[1][i] = str(scores[i])
     
@@ -817,7 +817,7 @@ def final_scores():
     print('Les scores ultimes sont :')
     print_score()
     
-    #Finds the best score and if there is a tie
+    #Détermine le meilleur score et en cas d'égalité
     best_score = max(scores)
     best_count = scores.count(best_score)
     
@@ -825,7 +825,7 @@ def final_scores():
         print('Le gagnant est '+score_board[0][0]+' !')
         
     else:
-        #If there is a tie, find and print the winners
+        #En cas d'égalité, détermine et imprime les gagnants
         if best_count > 1:
             winners = []
             for i,score in enumerate(score_board[1]):
@@ -835,7 +835,7 @@ def final_scores():
             winners[-1] = 'et '+str(winners[-1])
             print('Le jeu est à égalité. Les gagnants sont '+(", ".join(str(x) for x in winners))+' !')
         
-        #If there is no tie, print the winner
+        #S'il n'y a pas d'égalité, imprime le gagnant
         else:
             winner = score_board[0][scores.index(best_score)]
             print('Le gagnant est '+winner+' !')

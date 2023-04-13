@@ -657,6 +657,7 @@ def user_input():
     return word,cord,direct
 
 def print_round():
+    '''Imprimer les données du tour'''
     print('\n')
     global current_round, current_player, score_board
     current_round += 1
@@ -674,16 +675,15 @@ def print_actions():
     # Obtient la longueur maximale de la rangée
     max_length = max([len(i) for i in actions])
 
-    # Crée une bordure supérieure et inférieure
+    # Crée une bordure sous forme de string
     border = "+" + "-"*(max_length+2) + "+"
-    print(border)
+    print(border) #bordure du haut
 
     # Imprime chaque élément
     for el in actions:
         print("| " + el.ljust(max_length) + " |")
 
-    # Imprime la bordure du bas
-    print(border)
+    print(border) #bordure du bas
     
     print()
     

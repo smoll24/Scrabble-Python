@@ -1,5 +1,5 @@
 ---
-# Scrabble Python (FR)
+# PyScrabble (FR)
 Ceci est une implémentation Python du célèbre jeu de mots Scrabble. Le jeu peut être joué dans le shell Python, et il dispose d'un grand dictionnaire de mots français à choisir. Il est également disponible en anglais, mais l'équilibrage sera décalé en raison de la fréquence des lettres anglaises qui est différente de celle des lettres françaises.
 
 Créé par Chris Moll (@lobsterzerg), Sam Moll (@smoll24) et Esmé Letard (@eletard24).
@@ -22,7 +22,7 @@ Pour commencer à jouer, il suffit de cloner ou de télécharger ce dépôt et d
 - La liste de mots anglais provient de https://www.mit.edu/~ecprice/wordlist.10000.
 
 ---
-# Scrabble Python (EN)
+# PyScrabble (EN)
 This is a French Python implementation of the popular word game Scrabble. The game can be played in the Python shell, and it features a large dictionary of French words to choose from. It is also available in English, but the balancing will be off due to the frequency of English letters being different from those in French.
 
 Created by Chris Moll (@lobsterzerg), Sam Moll (@smoll24), and Esmé Letard (@eletard24).

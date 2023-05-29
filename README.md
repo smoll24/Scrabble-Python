@@ -6,6 +6,7 @@ Créé par Chris Moll (@lobsterzerg), Sam Moll (@smoll24) et Esmé Letard (@elet
 
 ### Démarrage du jeu
 Pour commencer à jouer, il suffit de cloner ou de télécharger ce dépôt et d'exécuter le fichier scrabble.py dans votre environnement Python. Vous serez invité à entrer le nombre de joueurs et leurs noms, puis le jeu commencera.
+
 Vous pouvez également utiliser la version Repl.it, que vous trouverez ici : https://replit.com/@cmoll24/ScrabbleTest#main.py
 
 ### Jeu
@@ -30,6 +31,7 @@ Created by Chris Moll (@lobsterzerg), Sam Moll (@smoll24), and Esmé Letard (@el
 
 ### Getting Started
 To start playing the game, simply clone or download this repository and run the scrabble.py file in your Python environment. You will be prompted to enter the number of players and their names, and then the game will begin.
+
 Or use the Repl.it version, found here: https://replit.com/@cmoll24/ScrabbleTest#main.py
 
 ### Gameplay

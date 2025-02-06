@@ -2,7 +2,7 @@
 # PyScrabble (FR)
 Ceci est une implémentation Python du célèbre jeu de mots Scrabble. Le jeu peut être joué dans le shell Python, et il dispose d'un grand dictionnaire de mots français à choisir. Il est également disponible en anglais, mais l'équilibrage sera décalé en raison de la fréquence des lettres anglaises qui est différente de celle des lettres françaises.
 
-Créé par Chris Moll (@lobsterzerg), Sam Moll (@smoll24) et Esmé Letard (@eletard24).
+Créé par Chris Moll (@cmoll24), Sam Moll (@smoll24) et Esmé Letard (@eletard24).
 
 ### Démarrage du jeu
 Pour commencer à jouer, il suffit de cloner ou de télécharger ce dépôt et d'exécuter le fichier scrabble.py dans votre environnement Python. Vous serez invité à entrer le nombre de joueurs et leurs noms, puis le jeu commencera.
